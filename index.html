@@ -108,7 +108,7 @@ input[type=range]{padding:0;width:150px;accent-color:var(--D)}
 /* panel de estado */
 .det{display:flex;flex-direction:column;gap:12px}
 .det .st{font-size:38px;font-weight:700;line-height:.95;text-transform:uppercase}
-.cand{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;font-size:14px;font-weight:600}
+.cand{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:center;font-size:14px;font-weight:600}
 .cand i{width:10px;height:10px}
 .cand b{font:700 24px 'Barlow Condensed',sans-serif}
 .pbar{height:12px;display:flex;overflow:hidden;gap:2px;background:var(--chip)}
@@ -154,6 +154,10 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 .tally .mk{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--fg)}
 .lvcell{display:flex;flex-direction:column;gap:2px;min-width:120px}
 .lvbar{display:flex;height:6px;gap:1px;background:var(--chip)}
+.pi{fill:currentColor;vertical-align:-2px;flex:none;display:inline-block}
+.pi.D{color:var(--D)}.pi.R{color:var(--R)}.pi.w{color:#fff}
+.pii{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--I);color:#fff;font:700 10px 'Libre Franklin',sans-serif;vertical-align:-2px;flex:none}
+.pii.w{background:#fff;color:var(--I)}
 /* noticias */
 .news{position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
 @media (max-width:1100px){.news{position:static;max-height:none}}
@@ -172,6 +176,11 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 .goog-text-highlight{background:none!important;box-shadow:none!important}
 #gte{display:none}
 </style>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="ic-R" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M3 12.5C3 8.6 6.2 6 10.5 6c1.6 0 3 .3 4.1.9C15.3 5.7 16.6 5 18 5c2.5 0 4 1.9 4 4.6 0 1.3-.4 2.3-.9 3.2v4.4c0 .9-.6 1.4-1.2 1.4-.5 0-1-.4-1-1v-3.4c-.3.1-.6.2-.9.2v1.8c0 .6-.4 1-.9 1H17v3.2c0 .6-.4.9-1 .9h-1.2c-.5 0-.9-.3-.9-.9v-2.7h-3.6v2.7c0 .6-.4.9-.9.9H8.2c-.5 0-.9-.3-.9-.9v-3.1C4.7 16.4 3 14.7 3 12.5Zm15.6-4.3a.8.8 0 1 0 0 1.6.8.8 0 0 0 0-1.6ZM2 12.8c.2-.2.6-.1.6.3-.1 1.2-.5 2-1.1 2.3-.3.1-.5-.2-.4-.4.4-.6.6-1.2.9-2.2Z"/></symbol>
+<symbol id="ic-D" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M15.6 1.6c.4-.3.9 0 .9.5l-.2 3.2.8.3 1.3-3c.2-.5.8-.5 1 0 .2.4.2 1.2-.1 2.6l-.4 1.6c.8.7 2.3 2 2.9 2.8.4.5.4 1.2-.1 1.6-.5.4-1.2.5-1.8.3l-1.6-.6c-.4.6-.9 1.2-1.5 1.6v6.2c0 .6-.4 1-.9 1h-.8c-.5 0-.9-.4-.9-1v-4.4c-1.2.3-2.8.4-4.3.3v4.1c0 .6-.4 1-.9 1H8c-.5 0-.9-.4-.9-1v-4.9c-1.2-.7-2-1.8-2.2-3.1-.8.5-1.4 1.3-1.7 2.6-.1.5-.8.6-1 .1-.4-1.2 0-2.6 1-3.6.8-.8 1.9-1.3 3.1-1.4 1.2-1 3-1.5 5.2-1.5 1.1 0 2.1.1 3-.1L15.3 3c0-.5.1-1.1.3-1.4Zm2.9 6a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z"/></symbol>
+</svg>
 
 <div class="wrap">
 <header class="mast"><div class="in">
@@ -526,6 +535,7 @@ const pc=x=>x>=0.995?'>99%':x<=0.005?'<1%':Math.round(x*100)+'%';
 const NAMES={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'Distrito de Columbia',FL:'Florida',GA:'Georgia',HI:'Hawái',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Luisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Míchigan',MN:'Minnesota',MS:'Misisipi',MO:'Misuri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'Nuevo Hampshire',NJ:'Nueva Jersey',NM:'Nuevo México',NY:'Nueva York',NC:'Carolina del Norte',ND:'Dakota del Norte',OH:'Ohio',OK:'Oklahoma',OR:'Oregón',PA:'Pensilvania',RI:'Rhode Island',SC:'Carolina del Sur',SD:'Dakota del Sur',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'Virginia Occidental',WI:'Wisconsin',WY:'Wyoming'};
 const SMALL=['VT','NH','MA','RI','CT','NJ','DE','MD','DC'];
 const PARTY={D:'Demócrata',R:'Republicano',I:'Independiente'};
+const PI=(p,s=15,cls='')=>p==='D'||p==='R'?`<svg class="pi ${p} ${cls}" width="${s}" height="${s}" role="img" aria-label="${PARTY[p]}"><title>${PARTY[p]}</title><use href="#ic-${p}"/></svg>`:`<span class="pii ${cls}" title="Independiente">I</span>`;
 let live={},tab='S',res=null,sel=null,tmr=null;
 $('asof').textContent=new Date(DATA.asof+'T12:00:00').toLocaleDateString('es-UY',{day:'numeric',month:'long'});
 const scenSel=$('scen');
@@ -590,7 +600,7 @@ function paintMap(){
     return `<button data-st="${st}" ${x?'':'disabled style="opacity:.55"'} ${st===sel?'style="border-color:var(--fg)"':''}><i style="background:${x?stepColor(x.p,x.o.r.L.p,x.o.live&&x.o.live.called):'var(--nu)'}"></i>${st}</button>`}).join('');
   $('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>select(b.dataset.st));
   const sw=v=>`<i style="background:var(--${v})"></i>`;
-  $('legend').innerHTML=`<span>Prob. de victoria:</span><span class="ramp">${['r3','r2','r1','tt','d1','d2','d3'].map(sw).join('')}</span><span>R ← empate → D</span>
+  $('legend').innerHTML=`<span>Prob. de victoria:</span><span class="ramp">${['r3','r2','r1','tt','d1','d2','d3'].map(sw).join('')}</span><span>${PI('R')} ← empate → ${PI('D')}</span>
   <span class="ramp">${['i1','i2','i3'].map(sw).join('')}</span><span>Independiente</span><span>${sw('nu')}Sin elección</span><span><i style="background:transparent;border:2px dashed var(--live)"></i>Contando</span>`;
 }
 function tip(e,st){
@@ -616,11 +626,11 @@ function detail(){
     <div class="kv num"><span>${r.L.n} ${(lv.D/tot*100).toFixed(1)}% · ${lv.D.toLocaleString('es-UY')}</span><span>${r.R.n} ${(lv.R/tot*100).toFixed(1)}% · ${lv.R.toLocaleString('es-UY')}</span></div></div>`}
   const extm=r.ext?(r.ext.margin!==undefined?r.ext.margin:r.ext.L-r.ext.R):null;
   const polls=r.polls.slice().sort((a,b)=>b.d.localeCompare(a.d));
-  d.innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${tab==='S'?'Senado':'Gobernación'}${r.cook?' · Cook: '+r.cook:''}</h3><span class="badge">Hoy: ${r.cur}</span></div>
+  d.innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${tab==='S'?'Senado':'Gobernación'}${r.cook?' · Cook: '+r.cook:''}</h3><span class="badge" style="display:inline-flex;gap:4px;align-items:center">Hoy ${PI(r.cur,14)}</span></div>
   <div class="st">${r.name}</div>
   <div class="sec" style="gap:6px">
-   <div class="cand"><i style="background:${lc}"></i><span>${r.L.n} <span class="note">${PARTY[L]}</span></span><b class="num ${L}">${pc(p)}</b></div>
-   <div class="cand"><i style="background:var(--R)"></i><span>${r.R.n} <span class="note">${PARTY[r.R.p]}</span></span><b class="num R">${pc(1-p)}</b></div>
+   <div class="cand">${PI(L,18)}<span>${r.L.n} <span class="note">${PARTY[L]}</span></span><b class="num ${L}">${pc(p)}</b></div>
+   <div class="cand">${PI(r.R.p,18)}<span>${r.R.n} <span class="note">${PARTY[r.R.p]}</span></span><b class="num R">${pc(1-p)}</b></div>
    <div class="pbar" title="Probabilidad de victoria"><div style="flex:${p};background:${lc}"></div><div style="flex:${1-p};background:var(--R)"></div></div>
    <p class="note">${lean(p)} ${p>.4&&p<.6?'':(p>=.5?r.L.n:r.R.n)} · probabilidad en 20 000 simulaciones</p>
   </div>
@@ -632,7 +642,7 @@ function detail(){
    <div class="stat"><span>Agregador</span><b>${extm===null?'—':f1(extm)}</b><span>${r.ext?r.ext.src:'sin datos'}</span></div>
    <div class="stat"><span>Base</span><b style="font-size:13px">${e.srcMain==='polls'?r.polls.length+' encuestas'+(e.blend?' + agreg.':''):e.srcMain==='ext'?'Agregador':'Sólo Cook'}</b><span>σ ${e.sigma.toFixed(1)}</span></div>
   </div>
-  ${polls.length?`<div class="sec" style="gap:6px"><h3>Encuestas (${polls.length})</h3><div class="polls">${polls.map(q=>`<div><span>${q.p}${q.sp?' <span class="badge">'+q.sp+'</span>':''} <span class="note">${q.d.slice(8)}/${q.d.slice(5,7)}</span></span><span class="num">${q.L}–${q.R}</span></div>`).join('')}</div></div>`:''}
+  ${polls.length?`<div class="sec" style="gap:6px"><h3>Encuestas (${polls.length})</h3><div class="polls">${polls.map(q=>`<div><span>${q.p}${q.sp?' <span class="badge" title="Encargada por la campaña o el partido">'+PI(q.sp,12)+'</span>':''} <span class="note">${q.d.slice(8)}/${q.d.slice(5,7)}</span></span><span class="num">${q.L}–${q.R}</span></div>`).join('')}</div></div>`:''}
   ${raceOf(tab==='S'?'G':'S',sel)?`<button id="swk">Ver ${tab==='S'?'gobernación':'Senado'} de ${NAMES[sel]}</button>`:''}`;
   const b=$('swk');if(b)b.onclick=()=>setTab(tab==='S'?'G':'S');
 }
@@ -646,7 +656,7 @@ function scoreboard(){
   const called=res.races.filter(o=>o.live&&o.live.called).length,counting=res.races.filter(o=>o.live&&!o.live.called).length;
   $('score').innerHTML=`
   <div class="card tile"><h3>Senado · 51 para controlar</h3><div class="trow"><span class="big D">${pc(s.ctl.D)}</span><span class="lbl">demócratas</span><span class="big R" style="margin-left:auto;font-size:26px">${pc(s.ctl.R)}</span><span class="lbl">rep.</span></div>${stack(s.ctl)}
-  <div class="kv"><span>Mediana <b class="num">${s.med} D</b></span><span>80%: ${s.lo}–${s.hi}</span>${s.ctl.I>0.005?`<span class="I">Independientes deciden ${pc(s.ctl.I)}</span>`:''}<span>50-50 → R (vicepresidente)</span></div></div>
+  <div class="kv"><span>Mediana <b class="num">${s.med}</b> ${PI('D',14)}</span><span>80%: ${s.lo}–${s.hi}</span>${s.ctl.I>0.005?`<span class="I">Independientes deciden ${pc(s.ctl.I)}</span>`:''}<span>50-50 → ${PI('R',14)} (vicepresidente)</span></div></div>
   <div class="card tile"><h3>Cámara · 218 · simplificado</h3><div class="trow"><span class="big D">${pc(h.p)}</span><span class="lbl">demócratas</span><span class="big R" style="margin-left:auto;font-size:26px">${pc(1-h.p)}</span><span class="lbl">rep.</span></div>${stack({D:h.p,R:1-h.p,I:0})}
   <div class="kv"><span>Bancas D media <b class="num">${h.mean.toFixed(0)}</b></span><span>80%: ${h.lo}–${h.hi}</span></div></div>
   <div class="card tile"><h3>Ambas cámaras · gobernaciones</h3><div class="trow"><span class="big D">${pc(res.both)}</span><span class="lbl">D controla ambas</span></div>
@@ -682,7 +692,7 @@ function generic(){
   const g=res.gen;
   $('gsum').innerHTML=`<span style="font-size:34px;font-weight:700" class="num D">D${f1(g.m)}</span><br>± ${(1.96*g.se).toFixed(1)} al 95% · ${g.n} encuestas · promedio simple D${f1(g.simple)}. Con el sesgo histórico elegido queda en <b class="num">D${f1(g.m-res.sc.Gen)}</b>.`;
   $('gtab').innerHTML=`<tr><th>Casa</th><th>Fecha</th><th>Pob.</th><th class="n">n</th><th class="n">D</th><th class="n">R</th><th class="n">Margen</th><th class="n">Casa</th><th class="n">Ajustado</th><th class="n">Peso</th></tr>`+
-  g.rows.map(x=>`<tr><td>${x.p.p}${x.p.sp?` <span class="badge">patroc. ${x.p.sp}</span>`:''}</td><td class="n">${x.p.d.slice(8)}/${x.p.d.slice(5,7)}</td><td>${x.p.pop}</td><td class="n">${x.p.n||'—'}${x.assumedN?'*':''}</td><td class="n">${x.p.L}</td><td class="n">${x.p.R}</td><td class="n">${f1(x.raw)}</td><td class="n">${f1(x.inf.he)}</td><td class="n"><b>${f1(x.adj)}</b></td><td class="n">${(x.share*100).toFixed(1)}%</td></tr>`).join('')+
+  g.rows.map(x=>`<tr><td>${x.p.p}${x.p.sp?` <span class="badge" title="Encargada por la campaña o el partido">patroc. ${PI(x.p.sp,12)}</span>`:''}</td><td class="n">${x.p.d.slice(8)}/${x.p.d.slice(5,7)}</td><td>${x.p.pop}</td><td class="n">${x.p.n||'—'}${x.assumedN?'*':''}</td><td class="n">${x.p.L}</td><td class="n">${x.p.R}</td><td class="n">${f1(x.raw)}</td><td class="n">${f1(x.inf.he)}</td><td class="n"><b>${f1(x.adj)}</b></td><td class="n">${(x.share*100).toFixed(1)}%</td></tr>`).join('')+
   `<tr><td colspan="10" class="note">* n asumido 800.</td></tr>`;
 }
 function races(){
@@ -690,7 +700,7 @@ function races(){
   $('rtab').innerHTML=`<tr><th>Estado</th><th>Candidatos</th>${isS?'<th>Cook</th>':''}<th class="n">Enc.</th><th class="n">Unificado ± MoE</th><th class="n">Ajustado</th><th>P(1.º gana)</th><th>Recuento</th></tr>`+
   list.map(({o,p})=>{const r=o.r,e=o.e,L=r.L.p,lv=o.live;
     const lt=lv?(lv.called?`<span class="badge" style="color:var(--${lv.called})">✓ ${lv.called}</span>`:`<span class="badge live">${Math.round(lv.f*100)}%</span>`):'';
-    return `<tr class="rw" data-st="${r.st}"><td><span class="sw" style="background:${stepColor(p,L,lv&&lv.called)}"></span><b>${r.name}</b></td><td><span class="${L}">${r.L.n}</span> <span class="note">vs</span> <span class="R">${r.R.n}</span></td>${isS?`<td>${r.cook||'—'}</td>`:''}<td class="n">${r.polls.length}</td><td class="n ${mcls(e.mu,L)}">${f1(e.mu)} ±${e.moe.toFixed(1)}</td><td class="n ${mcls(o.adj,L)}">${f1(o.adj)}</td><td><span class="pb" style="background:var(--R)"><i style="width:${(p*100).toFixed(0)}%;background:var(--${L})"></i></span><span class="num">${pc(p)}</span></td><td>${lt}</td></tr>`}).join('');
+    return `<tr class="rw" data-st="${r.st}"><td><span class="sw" style="background:${stepColor(p,L,lv&&lv.called)}"></span><b>${r.name}</b></td><td>${PI(L,14)} <span class="${L}">${r.L.n}</span> <span class="note">vs</span> ${PI(r.R.p,14)} <span class="R">${r.R.n}</span></td>${isS?`<td>${r.cook||'—'}</td>`:''}<td class="n">${r.polls.length}</td><td class="n ${mcls(e.mu,L)}">${f1(e.mu)} ±${e.moe.toFixed(1)}</td><td class="n ${mcls(o.adj,L)}">${f1(o.adj)}</td><td><span class="pb" style="background:var(--R)"><i style="width:${(p*100).toFixed(0)}%;background:var(--${L})"></i></span><span class="num">${pc(p)}</span></td><td>${lt}</td></tr>`}).join('');
   $('rtab').querySelectorAll('tr.rw').forEach(tr=>tr.onclick=()=>select(tr.dataset.st,true));
 }
 function histCharts(){
@@ -913,8 +923,8 @@ function countyPanel(){
     else if(c.m!=null){mean=c.m+shift;sd=Math.sqrt(x.o.e.sigma**2+36);src='proyección'}
     if(mean!=null){pL=ncdf(mean/sd);
       cands=`<div class="sec" style="gap:6px">
-       <div class="cand"><i style="background:${lcol}"></i><span>${x.o.r.L.n} <span class="note">${PARTY[Lp]}</span></span><b class="${Lp}">${pc(pL)}</b></div>
-       <div class="cand"><i style="background:var(--R)"></i><span>${x.o.r.R.n} <span class="note">${PARTY[x.o.r.R.p]}</span></span><b class="R">${pc(1-pL)}</b></div>
+       <div class="cand">${PI(Lp,18)}<span>${x.o.r.L.n} <span class="note">${PARTY[Lp]}</span></span><b class="${Lp}">${pc(pL)}</b></div>
+       <div class="cand">${PI(x.o.r.R.p,18)}<span>${x.o.r.R.n} <span class="note">${PARTY[x.o.r.R.p]}</span></span><b class="R">${pc(1-pL)}</b></div>
        <div class="pbar"><div style="flex:${pL};background:${lcol}"></div><div style="flex:${1-pL};background:var(--R)"></div></div>
        <p class="note">${lean(pL)} ${pL>.4&&pL<.6?'':(pL>=.5?x.o.r.L.n:x.o.r.R.n)} en el condado · según ${src} (margen ${mlab(mean,Lp)})</p></div>`}
   }
@@ -970,17 +980,17 @@ function liveSection(){
   const G=res.races.filter(o=>o.r.kind==='G'),gD=G.filter(o=>o.live&&o.live.called&&o.live.called!=='R').length,gR=G.filter(o=>o.live&&o.live.called==='R').length;
   $('ldot2').className='dot'+(L.length?' on':'');
   $('livetop').innerHTML=`<div class="card sec"><h3>Senado: bancas aseguradas</h3>
-   <div class="tally"><div style="flex:${sD};background:var(--D)">${sD} D</div>${cI?`<div style="flex:${cI};background:var(--I)">${cI}</div>`:''}<div style="flex:${und};background:transparent;color:var(--muted);justify-content:flex-start;padding-left:8px">${und} por definir</div><div style="flex:${sR};background:var(--R)">${sR} R</div><i class="mk" style="left:50.5%"></i></div>
+   <div class="tally"><div style="flex:${sD};background:var(--D)">${sD}&nbsp;${PI('D',16,'w')}</div>${cI?`<div style="flex:${cI};background:var(--I)">${cI}</div>`:''}<div style="flex:${und};background:transparent;color:var(--muted);justify-content:flex-start;padding-left:8px">${und} por definir</div><div style="flex:${sR};background:var(--R)">${sR}&nbsp;${PI('R',16,'w')}</div><i class="mk" style="left:50.5%"></i></div>
    <p class="note">Incluye las 65 bancas que no se eligen (34 D, 31 R). Línea = 51.</p></div>
    <div class="card sec"><h3>Estado del recuento</h3><div class="kv" style="font-size:14px"><span><b class="num">${L.filter(z=>z.o.live.called).length}</b> proyectadas</span><span><b class="num">${L.filter(z=>!z.o.live.called).length}</b> contando</span><span><b class="num">${res.races.length-L.length}</b> sin datos</span></div>
-   <div class="kv"><span>Gobernaciones proyectadas: <b class="D">${gD} D/I</b> · <b class="R">${gR} R</b></span></div></div>`;
+   <div class="kv"><span>Gobernaciones proyectadas: <b class="D">${gD}</b> ${PI('D',14)}/${PI('I',14)} · <b class="R">${gR}</b> ${PI('R',14)}</span></div></div>`;
   if(!L.length){$('livetab').innerHTML='<tr><td class="note" style="white-space:normal;padding:14px">Aún no hay resultados. Aparecerán aquí solos cuando el feed empiece a publicar (urnas cierran desde las 18:00 ET, 20:00 en Uruguay), o al cargarlos a mano en “Recuento en vivo”.</td></tr>';return}
   L.sort((a,b)=>(b.o.live.called?1:0)-(a.o.live.called?1:0)||b.o.live.f-a.o.live.f);
   $('livetab').innerHTML='<tr><th>Estado</th><th>Cargo</th><th class="n">Contado</th><th>Primero</th><th>Segundo</th><th class="n">Ventaja</th><th>Situación</th><th class="n">Modelo</th></tr>'+
   L.map(({o,p})=>{const r=o.r,v=o.live,tot=v.D+v.R+(v.I||0)||1,a=v.D/tot*100,b=v.R/tot*100,Lp=r.L.p;
     return `<tr class="rw" data-st="${r.st}" data-k="${r.kind}"><td><b>${r.name}</b></td><td>${r.kind==='S'?'Senado':'Gobernación'}</td><td class="n">${Math.round(v.f*100)}%</td>
-    <td><div class="lvcell"><span><span class="${Lp}">${r.L.n}</span> <b class="num">${a.toFixed(1)}%</b></span><span class="note num">${v.D.toLocaleString('es-UY')}</span></div></td>
-    <td><div class="lvcell"><span><span class="R">${r.R.n}</span> <b class="num">${b.toFixed(1)}%</b></span><span class="note num">${v.R.toLocaleString('es-UY')}</span></div></td>
+    <td><div class="lvcell"><span>${PI(Lp,14)} <span class="${Lp}">${r.L.n}</span> <b class="num">${a.toFixed(1)}%</b></span><span class="note num">${v.D.toLocaleString('es-UY')}</span></div></td>
+    <td><div class="lvcell"><span>${PI('R',14)} <span class="R">${r.R.n}</span> <b class="num">${b.toFixed(1)}%</b></span><span class="note num">${v.R.toLocaleString('es-UY')}</span></div></td>
     <td class="n ${a>=b?Lp:'R'}">${(a>=b?r.L.n:r.R.n)} +${Math.abs(a-b).toFixed(1)}</td>
     <td>${v.called?`<span class="badge" style="background:var(--${v.called});color:#fff">✓ ${v.called===Lp?r.L.n:r.R.n}</span>`:'<span class="badge live">Contando</span>'}</td>
     <td class="n">${pc(p)} ${r.L.n}</td></tr>`}).join('');
