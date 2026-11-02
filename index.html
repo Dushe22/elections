@@ -67,6 +67,9 @@ padding:16px max(16px,env(safe-area-inset-right,0px)) 18px max(16px,env(safe-are
 @media (max-width:820px){.score .tile{border-right:0;border-bottom:1px solid var(--line)}.score .tile:last-child{border-bottom:0}}
 .tile{display:flex;flex-direction:column;gap:8px}
 .tile .big{font-size:clamp(40px,4.4vw,52px);line-height:.9;font-weight:700;font-variant-numeric:tabular-nums}
+.trow2{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;min-width:0}
+.trow2 .rt{text-align:right}.trow2 .rt .big{font-size:clamp(28px,2.8vw,34px)}
+.trow2 .lbl{display:flex;align-items:center;gap:5px;margin-top:4px}.trow2 .rt .lbl{justify-content:flex-end}
 .trow{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap}
 .trow .R{margin-left:auto}
 .tile .lbl{font-size:12px;color:var(--fg2);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
@@ -726,11 +729,11 @@ function scoreboard(){
   const s=res.senate,h=res.house,g=res.gov;
   const called=res.races.filter(o=>o.live&&o.live.called).length,counting=res.races.filter(o=>o.live&&!o.live.called).length;
   $('score').innerHTML=`
-  <div class="card tile"><h3>Senado · 51 para controlar</h3><div class="trow"><span class="big D">${pc(s.ctl.D)}</span><span class="lbl">${PI('D',18)} demócratas</span><span class="big R" style="margin-left:auto;font-size:26px">${pc(s.ctl.R)}</span><span class="lbl">${PI('R',16)} rep.</span></div>${stack(s.ctl)}
+  <div class="card tile"><h3>Senado · 51 para controlar</h3><div class="trow2"><div><span class="big D">${pc(s.ctl.D)}</span><div class="lbl">${PI('D',16)} demócratas</div></div><div class="rt"><span class="big R">${pc(s.ctl.R)}</span><div class="lbl">${PI('R',16)} republicanos</div></div></div>${stack(s.ctl)}
   <div class="kv"><span>Mediana <b class="num">${s.med}</b> ${PI('D',14)}</span><span>80%: ${s.lo}–${s.hi}</span>${s.ctl.I>0.005?`<span class="I">Independientes deciden ${pc(s.ctl.I)}</span>`:''}<span>50-50 → ${PI('R',14)} (vicepresidente)</span></div></div>
-  <div class="card tile"><h3>Cámara · 218 · simplificado</h3><div class="trow"><span class="big D">${pc(h.p)}</span><span class="lbl">${PI('D',18)} demócratas</span><span class="big R" style="margin-left:auto;font-size:26px">${pc(1-h.p)}</span><span class="lbl">${PI('R',16)} rep.</span></div>${stack({D:h.p,R:1-h.p,I:0})}
+  <div class="card tile"><h3>Cámara · 218 · simplificado</h3><div class="trow2"><div><span class="big D">${pc(h.p)}</span><div class="lbl">${PI('D',16)} demócratas</div></div><div class="rt"><span class="big R">${pc(1-h.p)}</span><div class="lbl">${PI('R',16)} republicanos</div></div></div>${stack({D:h.p,R:1-h.p,I:0})}
   <div class="kv"><span>Bancas ${PI('D',14)} media <b class="num">${h.mean.toFixed(0)}</b></span><span>80%: ${h.lo}–${h.hi}</span></div></div>
-  <div class="card tile"><h3>Ambas cámaras · gobernaciones</h3><div class="trow"><span class="big D">${pc(res.both)}</span><span class="lbl">${PI('D',18)} controla ambas</span></div>
+  <div class="card tile"><h3>Ambas cámaras · gobernaciones</h3><div class="trow2"><div><span class="big D">${pc(res.both)}</span><div class="lbl">${PI('D',16)} controla ambas</div></div></div>
   <div class="kv"><span>Gobernaciones ${PI('D',14)}: <b class="num">${g.mean.toFixed(1)}</b> de 36 (80%: ${g.lo}–${g.hi})</span><span>Voto genérico ${f1(res.gen.m)} → ${f1(res.gen.m-res.sc.Gen)} ajustado</span>${called||counting?`<span class="badge live">${called} proyectadas · ${counting} contando</span>`:''}</div></div>`;
 }
 function hist(el,dist,lo,hi,thr,colorFn){
