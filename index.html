@@ -115,6 +115,13 @@ textarea{width:100%;min-height:120px;font-family:'IBM Plex Mono',monospace;font-
 <section class="panel">
 <h2>Recuento en vivo (noche electoral)</h2>
 <p class="note" style="margin:4px 0 10px">Pega resultados parciales en JSON o CSV. Cada carrera combina el recuento con el margen previo: a más porcentaje contado, más pesa el recuento. Una carrera con “called” (proyectada por AP) fija el resultado. La página es estática: no se actualiza sola; el script <span class="mono">ap_results.py</span> (sin probar) desde la API de AP); si lo abres como archivo suelto, pega a mano.</p>
+<div style="margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column;gap:8px">
+<b style="font-size:13px">Lectura automática (sin pegar datos)</b>
+<label class="note">Feed de CNN (principal, datos AP; público, sin clave). Si CNN cambia la dirección, edítala aquí.<input id="fUrl" style="width:100%" spellcheck="false"></label>
+<label class="note">Clave de AP (opcional, respaldo; queda sólo en este navegador)<input id="fKey" type="password" style="width:100%" autocomplete="off"></label>
+<label class="note">Proxy (opcional, si el navegador bloquea la descarga por CORS): prefijo al que se añade la URL codificada<input id="fProxy" style="width:100%" placeholder="https://mi-worker.workers.dev/?u=" spellcheck="false"></label>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button id="fdiag">Diagnóstico</button><span id="fst" class="note"></span></div>
+<pre id="fout" class="note" style="white-space:pre-wrap;margin:0;max-height:220px;overflow:auto"></pre></div>
 <textarea id="lv" spellcheck="false" placeholder='id,counted_pct,D,R,I,called
 S-TX,62,2310000,2400000,0,
 S-IA,100,610000,690000,0,R'></textarea>
@@ -495,15 +502,88 @@ $('lgo').onclick=()=>{try{const l=parseLive($('lv').value);const ids=new Set(DAT
 $('lclr').onclick=()=>{live={};$('lv').value='';$('lmsg').textContent='';run()};
 $('lex').onclick=()=>{$('lv').value='id,counted_pct,D,R,I,called\nS-TX,62,2310000,2400000,0,\nS-IA,100,610000,690000,0,R\nS-NC,45,1500000,1450000,0,';$('lmsg').textContent='EJEMPLO SIMULADO, no son resultados reales. Pulsa Aplicar.'};
 
-let auto=null;
-async function pull(){
-  if(!/^https?:/.test(location.protocol))return;
-  try{const r=await fetch('results.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;
-    const j=await r.json();if(!j.races||!j.races.length)return;
-    if($('lv').value.trim()&&!auto)return; // el usuario pegó datos a mano: no pisarlos
-    live=parseLive(JSON.stringify(j));auto=j.updated||true;
-    $('lmsg').textContent='Automático desde AP · actualizado '+(j.updated?new Date(j.updated).toLocaleTimeString('es-UY'):'')+' · '+j.races.length+' carreras';run()}catch(e){}
+const CNN_DEFAULT='https://politics.api.cnn.io/results/national-races/2026-GENERAL.json';
+const AP_BASE='https://api.ap.org/v3/elections/2026-11-03';
+const store={get(k){try{return localStorage.getItem(k)||''}catch(e){return ''}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let auto=null,lastRaw=null;
+$('fUrl').value=store.get('fUrl')||CNN_DEFAULT;$('fProxy').value=store.get('fProxy');$('fKey').value=store.get('fKey');
+const num=v=>{const n=typeof v==='string'?parseFloat(v.replace(/,/g,'')):v;return typeof n==='number'&&isFinite(n)?n:null};
+const partyOf=s=>{s=String(s||'');return /^(d|dem)/i.test(s)?'D':/^(r|rep|gop)/i.test(s)?'R':'I'};
+const keyOf=(o,re)=>Object.keys(o).find(k=>re.test(k));
+// Busca, en cualquier JSON, objetos con una lista de candidatos con partido y votos
+function findRaces(root){
+  const out=[];
+  (function walk(o){
+    if(!o||typeof o!=='object')return;
+    if(Array.isArray(o)){o.forEach(walk);return}
+    const ck=Object.keys(o).find(k=>Array.isArray(o[k])&&o[k].length>1&&typeof o[k][0]==='object'&&o[k][0]&&keyOf(o[k][0],/party/i)&&keyOf(o[k][0],/vote/i));
+    if(ck){out.push(o);return}
+    Object.values(o).forEach(walk);
+  })(root);
+  return out;
 }
-pull();setInterval(pull,60000);
+function normRace(o){
+  const ck=Object.keys(o).find(k=>Array.isArray(o[k])&&o[k][0]&&typeof o[k][0]==='object'&&keyOf(o[k][0],/party/i)&&keyOf(o[k][0],/vote/i));
+  const cands=o[ck].map(c=>{const vk=Object.keys(c).filter(k=>/vote/i.test(k)&&num(c[k])!==null&&!/pct|percent|share/i.test(k));
+    const wk=keyOf(c,/winner|elected|called/i);
+    return{party:partyOf(c[keyOf(c,/party/i)]),votes:vk.length?num(c[vk[0]]):0,win:wk?(c[wk]===true||/^(x|w|true|yes)$/i.test(String(c[wk]))):false}});
+  const strs=Object.entries(o).filter(([k,v])=>typeof v==='string');
+  let st=null;for(const [k,v] of strs){if(/state|postal/i.test(k)&&/^[A-Z]{2}$/.test(v.trim())){st=v.trim();break}}
+  if(!st)for(const [k,v] of strs){const m=String(v).match(/\b([A-Z]{2})\b/);if(/id|key|slug|name/i.test(k)&&m&&DATA.senate.concat(DATA.gov).some(r=>r.st===m[1])){st=m[1];break}}
+  const txt=strs.map(([k,v])=>v).join(' ').toLowerCase();
+  const kind=/senat/.test(txt)?'S':/governor|gubernat|\bgov\b/.test(txt)?'G':null;
+  let pk=keyOf(o,/(pct|percent).*(report|expect|in)|reporting.*(pct|percent)/i),pct=pk?num(o[pk]):null;
+  if(pct!==null&&pct<=1&&String(o[pk]).includes('.'))pct*=100;
+  const rw=keyOf(o,/^(winner|called|raceCalled)$/i);
+  const called=cands.find(c=>c.win)||(rw&&o[rw]===true?cands.slice().sort((a,b)=>b.votes-a.votes)[0]:null);
+  return{st,kind,pct,cands,called:called?called.party:null};
+}
+function toLive(raws){
+  const live={},seen=[];
+  raws.forEach(o=>{const n=normRace(o);if(!n.st||!n.kind)return;
+    const r=(n.kind==='S'?DATA.senate:DATA.gov).find(x=>x.st===n.st);if(!r)return;
+    const sum=p=>n.cands.filter(c=>c.party===p).reduce((s,c)=>s+c.votes,0);
+    const Lp=r.L.p,Rp=r.R.p,l=sum(Lp),rr=sum(Rp),oth=n.cands.reduce((s,c)=>s+c.votes,0)-l-rr;
+    const pct=n.pct===null?(l+rr?5:0):n.pct;
+    live[r.id]={f:Math.min(1,pct/100),D:l,R:rr,I:Math.max(0,oth),called:n.called};seen.push(r.id)});
+  return live;
+}
+function prox(u){const p=$('fProxy').value.trim();return p?p+encodeURIComponent(u):u}
+async function srcCnn(){
+  const u=$('fUrl').value.trim();if(!u)throw new Error('sin URL');
+  const r=await fetch(prox(u),{cache:'no-store'});if(!r.ok)throw new Error('CNN HTTP '+r.status);
+  const j=await r.json();lastRaw=j;return {live:toLive(findRaces(j)),src:'CNN'};
+}
+async function srcAp(){
+  const k=$('fKey').value.trim();if(!k)throw new Error('sin clave AP');
+  let raws=[];
+  for(const off of ['S','G']){
+    const r=await fetch(prox(AP_BASE+'?officeID='+off+'&format=json'),{headers:{'x-api-key':k},cache:'no-store'});
+    if(!r.ok)throw new Error('AP HTTP '+r.status);const j=await r.json();lastRaw=j;
+    (j.races||[]).forEach(race=>(race.reportingUnits||[]).filter(u=>u.level==='state').forEach(u=>{
+      raws.push({state:u.statePostal,office:off==='S'?'senate':'governor',pct:u.precinctsReportingPct,
+        candidates:(u.candidates||[]).map(c=>({party:c.party,votes:c.voteCount||0,winner:c.winner}))})}))}
+  return {live:toLive(raws.map(x=>({stateAbbreviation:x.state,officeName:x.office,percentReporting:x.pct,candidates:x.candidates}))),src:'AP'};
+}
+async function srcFile(){
+  const r=await fetch('results.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('sin results.json');
+  const j=await r.json();if(!j.races||!j.races.length)throw new Error('results.json vacío');
+  return {live:parseLive(JSON.stringify(j)),src:'results.json'};
+}
+async function pull(){
+  if(!/^https?:/.test(location.protocol)){$('fst').textContent='Abre la página desde un servidor (https) para la lectura automática.';return}
+  if($('lv').value.trim()&&!auto)return;
+  const errs=[];
+  for(const f of [srcCnn,srcAp,srcFile]){
+    try{const r=await f();const n=Object.keys(r.live).length;
+      if(!n){errs.push(f.name+': 0 carreras reconocidas');continue}
+      live=r.live;auto=true;$('fst').textContent='Automático · '+r.src+' · '+n+' carreras · '+new Date().toLocaleTimeString('es-UY');run();return}
+    catch(e){errs.push(f.name+': '+e.message)}
+  }
+  $('fst').textContent='Sin datos todavía ('+errs.join(' | ')+')';
+}
+['fUrl','fProxy','fKey'].forEach(i=>$(i).addEventListener('change',()=>{store.set(i,$(i).value);pull()}));
+$('fdiag').onclick=()=>{const rs=lastRaw?findRaces(lastRaw):[];$('fout').textContent=lastRaw?('Carreras detectadas: '+rs.length+'\n'+(rs[0]?JSON.stringify(rs[0],null,1).slice(0,1500):JSON.stringify(lastRaw,null,1).slice(0,1500))):'Aún no se descargó ningún feed.'};
+pull();setInterval(pull,45000);
 histCharts();run();
 </script>
