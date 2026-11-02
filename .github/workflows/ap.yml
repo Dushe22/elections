@@ -1,11 +1,11 @@
-name: Actualizar noticias, Kalshi y resultados
+name: Actualizar noticias y resultados
 on:
   schedule:
     - cron: "*/10 * * * *"   # GitHub puede retrasarlo varios minutos
   workflow_dispatch:
   push:
     branches: [midterm2026]
-    paths-ignore: ["news.json", "kalshi.json", "results.json"]
+    paths-ignore: ["news.json", "results.json"]
 permissions:
   contents: write
 concurrency: datos
@@ -18,8 +18,6 @@ jobs:
           ref: midterm2026   # la rama que publica GitHub Pages
       - name: Noticias (RSS de medios de EE.UU.)
         run: python3 news.py || true
-      - name: Kalshi (cotizaciones públicas)
-        run: python3 kalshi.py || true
       - name: Resultados AP (sólo 3-5 nov UTC y si hay clave)
         env:
           AP_API_KEY: ${{ secrets.AP_API_KEY }}
@@ -30,5 +28,5 @@ jobs:
       - name: Commit si cambió
         run: |
           git config user.name "github-actions"; git config user.email "actions@users.noreply.github.com"
-          git add news.json results.json kalshi.json
-          git diff --cached --quiet || (git commit -m "datos: noticias/Kalshi/resultados" && git pull --rebase -q origin midterm2026 && git push origin HEAD:midterm2026)
+          git add news.json results.json
+          git diff --cached --quiet || (git commit -m "datos: noticias/resultados" && git pull --rebase -q origin midterm2026 && git push origin HEAD:midterm2026)
