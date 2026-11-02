@@ -145,6 +145,8 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 
 #lmap path.c{stroke:var(--panel);stroke-width:.6;vector-effect:non-scaling-stroke;transition:fill .3s;cursor:pointer;outline:none}
 #lmap path.c:hover{stroke:var(--fg);stroke-width:1.6}
+#lmap path.c.sel{stroke:var(--fg);stroke-width:2.6}
+#lmap path.c:focus{outline:none}#lmap path.c:focus-visible{stroke:var(--fg);stroke-width:2.6}
 #lmap path.ol{fill:none;stroke:var(--fg);stroke-width:1.2;vector-effect:non-scaling-stroke;pointer-events:none}
 #lmode button{font-size:13px}
 .tally{position:relative;height:26px;display:flex;gap:2px;background:var(--chip)}
@@ -856,7 +858,7 @@ async function loadNews(){
 $('nsrc').onchange=renderNews;loadNews();setInterval(loadNews,180000);setInterval(renderNews,60000);
 
 /* ---------- mapa local por condados ---------- */
-const STCACHE={};let lmode='proj',liveCounty={},cntyTimer=null;
+const STCACHE={};let selC=null,lmode='proj',liveCounty={},cntyTimer=null;
 async function stData(st){if(STCACHE[st])return STCACHE[st];const r=await fetch('states/'+st+'.json');if(!r.ok)throw new Error('HTTP '+r.status);return STCACHE[st]=await r.json()}
 function mColor(m,Lp){if(m==null||isNaN(m))return 'var(--nu)';const L=Lp==='I'?'i':'d',a=Math.abs(m);
   if(a<3)return 'var(--tt)';const s=a>=20?3:a>=10?2:1;return m>0?`var(--${L}${s})`:`var(--r${s})`}
@@ -873,15 +875,17 @@ async function localMap(){
   const raceAdj=x?(x.o.live&&x.o.live.called?null:x.o.adj):null;
   const shift=x&&D.m24!=null?x.o.adj-D.m24:0;
   const lc=x?liveCounty[x.o.r.id]||{}:{};
-  if(!svg.dataset.st||svg.dataset.st!==st){
+  if(!svg.dataset.st||svg.dataset.st!==st){selC=null;
     svg.innerHTML=Object.entries(D.c).map(([f,c])=>`<path class="c" data-f="${f}" d="${c.d}"></path>`).join('')+`<path class="ol" d="${D.outline}"></path>`;
     svg.dataset.st=st;
-    svg.querySelectorAll('path.c').forEach(p=>{p.addEventListener('pointermove',e=>ctip(e,p.dataset.f));p.addEventListener('pointerleave',()=>$('tip').hidden=true);p.addEventListener('click',e=>ctip(e,p.dataset.f,true))});
+    svg.querySelectorAll('path.c').forEach(p=>{p.addEventListener('pointermove',e=>ctip(e,p.dataset.f));p.addEventListener('pointerleave',()=>$('tip').hidden=true);p.setAttribute('tabindex','0');p.addEventListener('click',()=>selCounty(p.dataset.f));p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selCounty(p.dataset.f)}})});
   }
   const val=f=>{const c=D.c[f];if(lmode==='p24')return c.m;if(lmode==='proj')return x&&c.m!=null?c.m+shift:null;
     const v=lc[f];if(!v)return null;const tot=v.D+v.R+(v.I||0);return tot?(v.D-v.R)/tot*100:null};
-  svg.querySelectorAll('path.c').forEach(p=>p.style.fill=mColor(val(p.dataset.f),lmode==='p24'?'D':Lp));
-  window._ctx={D,x,shift,lc,Lp};
+  svg.querySelectorAll('path.c').forEach(p=>{p.style.fill=mColor(val(p.dataset.f),lmode==='p24'?'D':Lp);p.classList.toggle('sel',p.dataset.f===selC)});
+  const sp=svg.querySelector('path.c.sel');if(sp)svg.insertBefore(sp,svg.querySelector('path.ol'));
+  window._ctx={D,x,shift,lc,Lp,val};
+  if(selC&&D.c[selC]){countyPanel();pullCounty();return}
   const sw=v=>`<i style="background:var(--${v})"></i>`,P=lmode==='p24'?'d':(Lp==='I'?'i':'d');
   $('llegend').innerHTML=`<span>Margen:</span><span class="ramp">${['r3','r2','r1','tt',P+'1',P+'2',P+'3'].map(sw).join('')}</span><span>R+20 · R+10 · R+3 · ±3 · ${lmode==='p24'?'D':Lp}+3 · +10 · +20</span><span>${sw('nu')}Sin datos</span>`;
   const n=Object.keys(D.c).length,nLive=Object.keys(lc).length;
@@ -894,6 +898,42 @@ async function localMap(){
    <div class="sec" style="gap:4px"><h3>Condados con más votos (2024)</h3><div class="polls" style="max-height:230px">${Object.entries(D.c).filter(([f,c])=>c.t).sort((a,b)=>b[1].t-a[1].t).slice(0,12).map(([f,c])=>`<div><span>${c.n}</span><span class="num">${mlab(val(f),lmode==='p24'?'D':Lp)}</span></div>`).join('')}</div></div>
    <p class="note">Mapa por condados (Connecticut usa regiones de planificación y Alaska distritos legislativos en los datos 2024, por eso pueden faltar). No incluye distritos de la Cámara: varios estados los redibujaron para 2026 y no hay mapas fiables cargados.</p>`;
   pullCounty();
+}
+
+const ncdf=z=>{const t=1/(1+0.2316419*Math.abs(z)),d=0.3989423*Math.exp(-z*z/2),p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p};
+function selCounty(f){selC=(selC===f?null:f);$('tip').hidden=true;localMap();
+  if(selC&&matchMedia('(max-width:860px)').matches)$('lside').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function countyPanel(){
+  const {D,x,shift,lc,Lp}=window._ctx,c=D.c[selC],v=lc[selC],st=sel;
+  const lcol=`var(--${Lp})`,share=c.t&&D.c?c.t/Object.values(D.c).reduce((s,z)=>s+(z.t||0),0):null;
+  let head,cands='';
+  if(x){
+    let pL,mean,sd,src;
+    if(v&&v.D+v.R>0){const tot=v.D+v.R+(v.I||0);mean=(v.D-v.R)/tot*100;sd=4;src='recuento parcial'}
+    else if(c.m!=null){mean=c.m+shift;sd=Math.sqrt(x.o.e.sigma**2+36);src='proyección'}
+    if(mean!=null){pL=ncdf(mean/sd);
+      cands=`<div class="sec" style="gap:6px">
+       <div class="cand"><i style="background:${lcol}"></i><span>${x.o.r.L.n} <span class="note">${PARTY[Lp]}</span></span><b class="${Lp}">${pc(pL)}</b></div>
+       <div class="cand"><i style="background:var(--R)"></i><span>${x.o.r.R.n} <span class="note">${PARTY[x.o.r.R.p]}</span></span><b class="R">${pc(1-pL)}</b></div>
+       <div class="pbar"><div style="flex:${pL};background:${lcol}"></div><div style="flex:${1-pL};background:var(--R)"></div></div>
+       <p class="note">${lean(pL)} ${pL>.4&&pL<.6?'':(pL>=.5?x.o.r.L.n:x.o.r.R.n)} en el condado · según ${src} (margen ${mlab(mean,Lp)})</p></div>`}
+  }
+  let liveHtml='';
+  if(v){const tot=v.D+v.R+(v.I||0)||1;
+    liveHtml=`<div class="sec" style="gap:6px"><div style="display:flex;justify-content:space-between"><h3>Recuento</h3><span class="badge live">● En vivo</span></div>
+    <div class="pbar"><div style="flex:${v.D};background:${lcol}"></div>${v.I?`<div style="flex:${v.I};background:var(--muted)"></div>`:''}<div style="flex:${v.R};background:var(--R)"></div></div>
+    <div class="kv"><span>${x.o.r.L.n} ${(v.D/tot*100).toFixed(1)}% · ${v.D.toLocaleString('es-UY')}</span><span>${x.o.r.R.n} ${(v.R/tot*100).toFixed(1)}% · ${v.R.toLocaleString('es-UY')}</span></div></div>`}
+  $('lside').innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${x?(tab==='S'?'Senado':'Gobernación'):'Condado'} · ${NAMES[st]}</h3><button id="cback" style="font-size:12px;padding:3px 8px">← Estado</button></div>
+   <div class="det" style="gap:10px;padding:0"><div class="st">${c.n}</div></div>
+   ${cands}${liveHtml}
+   <div class="stats">
+    <div class="stat"><span>Presidencial 2024</span><b class="${c.m==null?'':c.m>=0?'D':'R'}">${mlab(c.m)}</b><span>${c.pd!=null?'Harris '+c.pd+'% · Trump '+c.pr+'%':'sin datos'}</span></div>
+    <div class="stat"><span>Proyección 2026</span><b class="${x&&c.m!=null?mcls(c.m+shift,Lp):''}">${x&&c.m!=null?mlab(c.m+shift,Lp):'—'}</b><span>swing uniforme ${x?f1(shift):''}</span></div>
+    <div class="stat"><span>Votos 2024</span><b>${c.t?c.t.toLocaleString('es-UY'):'—'}</b><span>${share?(share*100).toFixed(1)+'% del estado':''}</span></div>
+    <div class="stat"><span>Código FIPS</span><b>${selC}</b><span>Censo de EE.UU.</span></div>
+   </div>
+   <p class="note">La probabilidad por condado es orientativa: usa la proyección por swing uniforme (o el recuento si ya hay) con un error amplio, porque no hay encuestas por condado.</p>`;
+  $('cback').onclick=()=>{selC=null;localMap()};
 }
 function ctip(e,f,tap){const {D,x,shift,lc,Lp}=window._ctx,c=D.c[f],v=lc[f],t=$('tip');
   if(e.pointerType==='touch'&&!tap){return}
