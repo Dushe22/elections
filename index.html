@@ -162,7 +162,8 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 .pii{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--I);color:#fff;font:700 10px 'Libre Franklin',sans-serif;vertical-align:2px;flex:none}
 .pii.w{background:#fff;color:var(--I)}
 .esel{display:flex;align-items:center;gap:8px;font:700 12px 'Libre Franklin',sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
-.esel select{font:700 15px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.02em;padding:6px 10px;border:2px solid var(--fg);border-radius:3px;max-width:100%}
+.esel select{font:700 15px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.02em;padding:5px 10px;border:1px solid var(--line);border-radius:3px;max-width:100%;color:var(--muted)}
+.esel select.on{border:2px solid var(--accent);color:var(--fg)}
 /* noticias */
 .news{position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
 @media (max-width:1100px){.news{position:static;max-height:none}}
@@ -213,7 +214,8 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 
 <section class="sec">
   <div class="sechead"><h2 id="maptitle">Mapa del Senado</h2>
-  <label class="esel"><span>Elección</span><select id="esel" aria-label="Elección a mostrar en el mapa"></select></label></div>
+  <div style="display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap"><div class="seg" role="tablist"><button id="tS" class="on" role="tab">Senado · 35</button><button id="tG" role="tab">Gobernaciones · 36</button></div>
+  <label class="esel"><select id="esel" aria-label="Elecciones pasadas"></select></label></div></div>
   <div class="mapgrid">
     <div class="card" style="padding:12px 12px 14px">
       <svg id="map" class="notranslate" translate="no" viewBox="0 0 975 610" role="img" aria-label="Mapa de Estados Unidos por probabilidad de victoria"></svg>
@@ -658,7 +660,7 @@ function detail(){
   ${raceOf(tab==='S'?'G':'S',sel)?`<button id="swk">Ver ${tab==='S'?'gobernación':'Senado'} de ${NAMES[sel]}</button>`:''}`;
   const b=$('swk');if(b)b.onclick=()=>setTab(tab==='S'?'G':'S');
 }
-function setTab(t){const was=isH();tab=t;$('esel').value=t;const h=isH();
+function setTab(t){const was=isH();tab=t;const h=isH();$('esel').value=h?t:'';$('esel').classList.toggle('on',h);$('tS').classList.toggle('on',t==='S');$('tG').classList.toggle('on',t==='G');
   $('lmode').querySelectorAll('button').forEach(b=>b.hidden=h&&b.dataset.m!=='p');
   if(h){lmode='p';cy=countyYear()}else{cy=2024;if(was)lmode='proj'}
   $('lmp').textContent=cy?'Presidencial '+cy:'';if(h&&!cy)$('lmp').hidden=true;
@@ -1094,9 +1096,9 @@ const EVSPLIT={ME:{D:3,R:1},NE:{D:1,R:4}};
 const P24=st=>{const z=STIDX[st];if(!z||z.t24==null)return null;const win=z.d24>z.r24?'D':'R';const ev=EVSPLIT[st]||{[win]:z.ev,[win==='D'?'R':'D']:0};return {ev,evT:z.ev,win}};
 const EVTOT=(()=>{let D=0,R=0;Object.keys(STIDX).forEach(s=>{const z=P24(s);if(z){D+=z.ev.D||0;R+=z.ev.R||0}});return {D,R}})();
 // selector de elección
-(()=>{const s=$('esel');const g0=document.createElement('optgroup');g0.label='2026 · en curso';g0.append(new Option('Senado 2026','S'),new Option('Gobernaciones 2026','G'));s.append(g0);
+(()=>{const s=$('esel');const o0=new Option('Elecciones pasadas…','');o0.disabled=true;s.append(o0);$('tS').onclick=()=>setTab('S');$('tG').onclick=()=>setTab('G');
   const ys=[...new Set(Object.keys(HIST).map(k=>+k.slice(1)))].sort((a,b)=>b-a);
   ys.forEach(y=>{const g=document.createElement('optgroup');g.label=String(y);['P','S','G'].forEach(o=>{if(HIST[o+y])g.append(new Option(OFF[o]+' '+y,o+y))});s.append(g)});
-  s.value='S';s.onchange=()=>setTab(s.value)})();
+  s.value='';s.onchange=()=>{if(s.value)setTab(s.value)}})();
 buildMap();histCharts();run();
 </script>
