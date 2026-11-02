@@ -166,6 +166,13 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 .esel select.on{border:2px solid var(--accent);color:var(--fg)}
 .stats>.stat:last-child:nth-child(odd){grid-column:1/-1}
 .xsel{align-self:flex-end;font-size:12px;padding:3px 9px;font-weight:600;background:transparent}
+.chips button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+#hrtab td.w{white-space:normal;min-width:190px;max-width:320px;font-size:12.5px;color:var(--fg2)}
+#hrtab td.w,#hrtab th:first-child{position:sticky;left:0;z-index:1;background:var(--panel);box-shadow:1px 0 0 var(--line)}
+#hrtab th:first-child{background:var(--panel2)}
+#hrtab tr.next td.w{background:var(--warnbg)}
+#hrtab tr.past td{opacity:.5}
+#hrtab tr.next td{background:var(--warnbg)}
 /* noticias */
 .news{position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
 @media (max-width:1100px){.news{position:static;max-height:none}}
@@ -249,6 +256,14 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
   </div>
 </section>
 
+<section class="sec" id="hrsec">
+  <div class="sechead"><h2>Horarios de cierre de urnas</h2><span class="note" id="hrcount"></span></div>
+  <div class="card sec" style="gap:12px">
+    <div class="chips" id="hrzones" style="margin:0" aria-label="Zonas horarias"></div>
+    <div class="tw" style="border:0"><table id="hrtab"></table></div>
+    <p class="note">Martes 3 de noviembre de 2026 (EE.UU. ya está en horario de invierno). Horarios aproximados: varios estados cierran en dos momentos por tener dos husos horarios, y cada estado puede cambiar los suyos; consulta la autoridad electoral de cada estado. Toca los países para mostrarlos u ocultarlos.</p>
+  </div>
+</section>
 <section class="sec" id="livesec">
   <div class="sechead"><h2><i class="dot" id="ldot2" style="display:inline-block;margin:0 8px 0 2px;vertical-align:4px"></i>Resultados en vivo</h2><span class="note" id="lupd"></span></div>
   <div class="two" id="livetop"></div>
@@ -1032,7 +1047,7 @@ function liveSection(){
    <p class="note">Incluye las 65 bancas que no se eligen (34 D, 31 R). Línea = 51.</p></div>
    <div class="card sec"><h3>Estado del recuento</h3><div class="kv" style="font-size:14px"><span><b class="num">${L.filter(z=>z.o.live.called).length}</b> proyectadas</span><span><b class="num">${L.filter(z=>!z.o.live.called).length}</b> contando</span><span><b class="num">${res.races.length-L.length}</b> sin datos</span></div>
    <div class="kv"><span>Gobernaciones proyectadas: <b class="D">${gD}</b> ${PI('D',14)}/${PI('I',14)} · <b class="R">${gR}</b> ${PI('R',14)}</span></div></div>`;
-  if(!L.length){$('livetab').innerHTML='<tr><td class="note" style="white-space:normal;padding:14px">Aún no hay resultados. Aparecerán aquí solos cuando el feed empiece a publicar (urnas cierran desde las 18:00 ET, 20:00 en Uruguay), o al cargarlos a mano en “Recuento en vivo”.</td></tr>';return}
+  if(!L.length){$('livetab').innerHTML='<tr><td class="note" style="white-space:normal;padding:14px">Aún no hay resultados. Aparecerán aquí solos cuando el feed empiece a publicar (los primeros cierres de urnas están en “Horarios de cierre” más arriba), o al cargarlos a mano en “Recuento en vivo”.</td></tr>';return}
   L.sort((a,b)=>(b.o.live.called?1:0)-(a.o.live.called?1:0)||b.o.live.f-a.o.live.f);
   $('livetab').innerHTML='<tr><th>Estado</th><th>Cargo</th><th class="n">Contado</th><th>Primero</th><th>Segundo</th><th class="n">Ventaja</th><th>Situación</th><th class="n">Modelo</th></tr>'+
   L.map(({o,p})=>{const r=o.r,v=o.live,tot=v.D+v.R+(v.I||0)||1,a=v.D/tot*100,b=v.R/tot*100,Lp=r.L.p;
@@ -1143,5 +1158,43 @@ $('tvform').onsubmit=e=>{e.preventDefault();const u=$('tvurl').value.trim();
   if(!m){$('tvnote').textContent='No reconozco ese enlace: pega uno de un video o transmisión de YouTube.';return}
   tvShow(`https://www.youtube.com/embed/${m[1]}?autoplay=1`,`https://www.youtube.com/watch?v=${m[1]}`,'Transmisión elegida a mano.')};
 (()=>{let i=0;try{i=+(localStorage.getItem('tv')||0)}catch(e){}if(!TV[i])i=0;$('tvsel').value=i;tvPick(i)})();
+
+/* ---------- horarios de cierre ---------- */
+const WAVES=[
+ ['2026-11-03T23:00:00Z','Primeros cierres','Este de Indiana y de Kentucky.'],
+ ['2026-11-04T00:00:00Z','','Georgia, Carolina del Sur, Virginia, Vermont, resto de Indiana y Kentucky, casi toda Florida y Nuevo Hampshire.'],
+ ['2026-11-04T00:30:00Z','','Carolina del Norte, Ohio, Virginia Occidental.'],
+ ['2026-11-04T01:00:00Z','Gran ola','Pensilvania, Míchigan (casi todo), Texas (casi todo), Alabama, Connecticut, Delaware, D.C., Illinois, Maine, Maryland, Massachusetts, Misisipi, Misuri, Nueva Jersey, Oklahoma, Rhode Island, Tennessee, oeste de Florida.'],
+ ['2026-11-04T01:30:00Z','','Arkansas.'],
+ ['2026-11-04T02:00:00Z','','Arizona, Colorado, Iowa, Kansas, Luisiana, Minnesota, Nebraska, Nueva York, Nuevo México, Dakota del Norte y del Sur, Wisconsin, Wyoming, resto de Texas y Míchigan.'],
+ ['2026-11-04T03:00:00Z','','Montana, Nevada, Utah, sur de Idaho.'],
+ ['2026-11-04T04:00:00Z','Costa oeste','California, Oregón, Washington, norte de Idaho.'],
+ ['2026-11-04T05:00:00Z','','Hawái y casi toda Alaska.'],
+ ['2026-11-04T06:00:00Z','Últimos cierres','Islas Aleutianas (Alaska).']];
+const ZONES=[
+ ['America/New_York','EE.UU. · Este (ET)',1],['America/Chicago','EE.UU. · Centro (CT)',1],['America/Denver','EE.UU. · Montaña (MT)',1],['America/Phoenix','EE.UU. · Arizona',0],
+ ['America/Los_Angeles','EE.UU. · Pacífico (PT)',1],['America/Anchorage','EE.UU. · Alaska',1],['Pacific/Honolulu','EE.UU. · Hawái',1],
+ ['America/Montevideo','Uruguay',1],['America/Argentina/Buenos_Aires','Argentina',1],['America/Sao_Paulo','Brasil (Brasilia)',0],['America/Santiago','Chile',0],
+ ['America/Asuncion','Paraguay',0],['America/La_Paz','Bolivia',0],['America/Lima','Perú',0],['America/Bogota','Colombia',0],['America/Guayaquil','Ecuador',0],['America/Caracas','Venezuela',0],
+ ['America/Mexico_City','México (centro)',1],['America/Guatemala','Centroamérica',0],['America/Havana','Cuba',0],['America/Santo_Domingo','Rep. Dominicana / Puerto Rico',0],
+ ['Europe/Madrid','España',1],['Europe/London','Reino Unido',0],['Europe/Berlin','Alemania / Francia / Italia',0],['Europe/Moscow','Rusia (Moscú)',0],
+ ['Asia/Kolkata','India',0],['Asia/Shanghai','China',0],['Asia/Tokyo','Japón',0],['Australia/Sydney','Australia (Sídney)',0]];
+let hrOn=null;try{hrOn=JSON.parse(localStorage.getItem('hrz')||'null')}catch(e){}
+if(!Array.isArray(hrOn))hrOn=ZONES.filter(z=>z[2]).map(z=>z[0]);
+const myTZ=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return null}})();
+function hfmt(d,tz){const o={hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz};const day={weekday:'short',timeZone:tz};
+  const hm=new Intl.DateTimeFormat('es',o).format(d),wd=new Intl.DateTimeFormat('es',day).format(d).replace('.','');return {hm,wd}}
+function hrRender(){
+  $('hrzones').innerHTML=ZONES.map(([tz,n])=>`<button type="button" data-tz="${tz}" class="${hrOn.includes(tz)?'on':''}" aria-pressed="${hrOn.includes(tz)}">${n}</button>`).join('');
+  $('hrzones').querySelectorAll('button').forEach(b=>b.onclick=()=>{const z=b.dataset.tz;hrOn=hrOn.includes(z)?hrOn.filter(x=>x!==z):[...hrOn,z];try{localStorage.setItem('hrz',JSON.stringify(hrOn))}catch(e){}hrRender()});
+  const cols=ZONES.filter(z=>hrOn.includes(z[0]));const mine=myTZ&&!cols.some(z=>z[0]===myTZ);
+  const now=Date.now();let next=WAVES.findIndex(w=>new Date(w[0])>now);
+  $('hrtab').innerHTML=`<tr><th>Cierran</th>${mine?'<th class="n">Tu hora</th>':''}${cols.map(z=>`<th class="n">${z[1]}</th>`).join('')}</tr>`+
+   WAVES.map(([iso,lab,txt],i)=>{const d=new Date(iso);const cell=tz=>{const f=hfmt(d,tz);return `<td class="n"><b class="num">${f.hm}</b> <span class="note">${f.wd}</span></td>`};
+    return `<tr class="${new Date(iso)<now?'past':i===next?'next':''}"><td class="w">${lab?`<b>${lab}.</b> `:''}${txt}</td>${mine?cell(myTZ):''}${cols.map(z=>cell(z[0])).join('')}</tr>`}).join('');
+  if(next<0)$('hrcount').textContent='Ya cerraron todas las urnas';
+  else{const ms=new Date(WAVES[next][0])-now,h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000);$('hrcount').textContent=(next===0?'Primer cierre':'Próximo cierre')+' en '+(h>=24?Math.floor(h/24)+' d '+(h%24)+' h':h+' h '+m+' min')}
+}
+hrRender();setInterval(hrRender,60000);
 buildMap();histCharts();run();
 </script>
