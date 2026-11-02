@@ -164,6 +164,8 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 .esel{display:flex;align-items:center;gap:8px;font:700 12px 'Libre Franklin',sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
 .esel select{font:700 15px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.02em;padding:5px 10px;border:1px solid var(--line);border-radius:3px;max-width:100%;color:var(--muted)}
 .esel select.on{border:2px solid var(--accent);color:var(--fg)}
+.stats>.stat:last-child:nth-child(odd){grid-column:1/-1}
+.xsel{align-self:flex-end;font-size:12px;padding:3px 9px;font-weight:600;background:transparent}
 /* noticias */
 .news{position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
 @media (max-width:1100px){.news{position:static;max-height:none}}
@@ -634,9 +636,13 @@ function tip(e,st){
   t.innerHTML=`<b>${NAMES[st]}</b><br>`+(x?`${x.o.r.L.n} ${pc(x.p)} · ${x.o.r.R.n} ${pc(1-x.p)}`+(x.o.live?`<br>${x.o.live.called?'Proyectada: '+x.o.live.called:Math.round(x.o.live.f*100)+'% contado'}`:''):'Sin elección este año');
   t.hidden=false;const w=t.offsetWidth;t.style.left=Math.min(innerWidth-w-8,e.clientX+14)+'px';t.style.top=(e.clientY+14)+'px';
 }
-function select(st,scroll){sel=st;paintMap();detail();localMap();if(scroll)$('map').scrollIntoView({behavior:'smooth',block:'center'})}
+let cleared=false;
+function clearSel(){sel=null;selC=null;cleared=true;$('tip').hidden=true;paintMap();detail();localMap()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sel&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))clearSel()});
+function select(st,scroll){if(st===sel&&!scroll)return clearSel();sel=st;cleared=false;paintMap();detail();localMap();if(scroll)$('map').scrollIntoView({behavior:'smooth',block:'center'})}
 
-function detail(){
+function detail(){detail0();const d=$('det');if(sel){const b=document.createElement('button');b.className='xsel';b.id='xsel';b.type='button';b.innerHTML='✕ Quitar selección';b.onclick=clearSel;d.prepend(b)}}
+function detail0(){
   if(isH())return detailH();
   const d=$('det'),x=sel?raceOf(tab,sel):null;
   if(!x){const other=sel&&raceOf(tab==='S'?'G':'S',sel);
@@ -706,7 +712,7 @@ function render(){
   scoreboard();
   hist('hsen',res.senate.dist,38,62,51,i=>i>=51?'var(--D)':'var(--R)');
   hist('hhou',res.house.hist,180,290,218,i=>i>=218?'var(--D)':'var(--R)');
-  if(!sel){let b=null;res.races.forEach((o,i)=>{if(o.r.kind===tab&&(!b||Math.abs(res.p[i]-.5)<b.d))b={st:o.r.st,d:Math.abs(res.p[i]-.5)}});sel=b&&b.st}
+  if(!sel&&!cleared){let b=null;res.races.forEach((o,i)=>{if(o.r.kind===tab&&(!b||Math.abs(res.p[i]-.5)<b.d))b={st:o.r.st,d:Math.abs(res.p[i]-.5)}});sel=b&&b.st}
   paintMap();detail();ext();generic();races();liveSection();localMap();
 }
 function ext(){
@@ -905,7 +911,7 @@ function mColor(m,Lp){if(m==null||isNaN(m))return 'var(--nu)';const L=Lp==='I'?'
   if(a<3)return 'var(--tt)';const s=a>=20?3:a>=10?2:1;return m>0?`var(--${L}${s})`:`var(--r${s})`}
 const mlab=(m,Lp)=>m==null||isNaN(m)?'—':(m>=0?(Lp||'D'):'R')+'+'+Math.abs(m).toFixed(1);
 async function localMap(){
-  const st=sel;if(!st){return}
+  const st=sel;if(!st){const s=$('lmap');s.innerHTML='';s.dataset.st='';s.removeAttribute('viewBox');$('ltitle').textContent='Elige un estado';$('lsub').textContent='Mapa local';$('llegend').innerHTML='';$('lside').innerHTML='<p class="note">Toca un estado en el mapa nacional para ver sus condados.</p>';return}
   const x=raceOf(tab,st);
   $('ltitle').textContent=NAMES[st];
   $('lsub').textContent='Mapa local · '+(isH()?ELABEL(tab)+(!cy?' · sin resultados por condado':''):x?(tab==='S'?'Senado':'Gobernación'):'sin carrera de '+(tab==='S'?'Senado':'gobernador')+' en 2026');
