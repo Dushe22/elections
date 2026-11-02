@@ -117,7 +117,10 @@ input[type=range]{padding:0;width:150px;accent-color:var(--D)}
 .stat b{display:block;font:700 18px 'Barlow Condensed',sans-serif}
 .stat span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .polls{font-size:12.5px;color:var(--fg2);display:flex;flex-direction:column;gap:3px;max-height:190px;overflow:auto}
-.polls div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--grid);padding-bottom:3px}
+.polls div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:1px solid var(--grid);padding-bottom:3px}
+.polls div>span:first-child{min-width:0}
+.polls div>span:last-child{flex:none;white-space:nowrap}
+.spn{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--muted);white-space:nowrap}
 .badge{display:inline-block;font-size:10.5px;padding:2px 6px;border-radius:2px;background:var(--chip);color:var(--fg2);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
 .badge.live{background:var(--live);color:#fff}
 /* tablas */
@@ -651,7 +654,7 @@ function detail(){
    <div class="stat"><span>Agregador</span><b>${extm===null?'—':f1(extm)}</b><span>${r.ext?r.ext.src:'sin datos'}</span></div>
    <div class="stat"><span>Base</span><b style="font-size:13px">${e.srcMain==='polls'?r.polls.length+' encuestas'+(e.blend?' + agreg.':''):e.srcMain==='ext'?'Agregador':'Sólo Cook'}</b><span>σ ${e.sigma.toFixed(1)}</span></div>
   </div>
-  ${polls.length?`<div class="sec" style="gap:6px"><h3>Encuestas (${polls.length})</h3><div class="polls">${polls.map(q=>`<div><span>${q.p}${q.sp?' <span class="badge" title="Encargada por la campaña o el partido">'+PI(q.sp,12)+'</span>':''} <span class="note">${q.d.slice(8)}/${q.d.slice(5,7)}</span></span><span class="num">${q.L}–${q.R}</span></div>`).join('')}</div></div>`:''}
+  ${polls.length?`<div class="sec" style="gap:6px"><h3>Encuestas (${polls.length})</h3><div class="polls">${polls.map(q=>{const fav=q.sp==='D'?r.L.p:q.sp==='R'?r.R.p:null,fn=q.sp==='D'?r.L.n:r.R.n;return `<div><span>${q.p}${fav?` <span class="spn" title="Encargada por un grupo afín a ${fn}">${PI(fav,13)}</span>`:''} <span class="note">${q.d.slice(8)}/${q.d.slice(5,7)}</span></span><span class="num">${q.L}–${q.R}</span></div>`}).join('')}</div></div>`:''}
   ${raceOf(tab==='S'?'G':'S',sel)?`<button id="swk">Ver ${tab==='S'?'gobernación':'Senado'} de ${NAMES[sel]}</button>`:''}`;
   const b=$('swk');if(b)b.onclick=()=>setTab(tab==='S'?'G':'S');
 }
