@@ -1,4 +1,4 @@
-name: Actualizar resultados AP
+name: Actualizar noticias y resultados
 on:
   schedule:
     - cron: "*/5 * * * *"   # GitHub puede retrasarlo varios minutos
@@ -11,13 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Descargar de AP (solo 3-4 nov UTC)
+      - name: Noticias (RSS de medios de EE.UU.)
+        run: python3 news.py || true
+      - name: Resultados AP (sólo 3-5 nov UTC y si hay clave)
         env:
           AP_API_KEY: ${{ secrets.AP_API_KEY }}
         run: |
-          case "$(date -u +%F)" in 2026-11-03|2026-11-04|2026-11-05) python3 ap_results.py ;; *) echo "fuera de fecha" ;; esac
+          if [ -n "$AP_API_KEY" ]; then
+            case "$(date -u +%F)" in 2026-11-03|2026-11-04|2026-11-05) python3 ap_results.py || true ;; *) echo "fuera de fecha" ;; esac
+          fi
       - name: Commit si cambió
         run: |
           git config user.name "github-actions"; git config user.email "actions@users.noreply.github.com"
-          git add results.json
-          git diff --cached --quiet || (git commit -m "resultados AP" && git push)
+          git add news.json results.json
+          git diff --cached --quiet || (git commit -m "datos: noticias/resultados" && git pull --rebase -q && git push)
