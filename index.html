@@ -658,7 +658,7 @@ function detail(){
 function setTab(t){const was=isH();tab=t;$('esel').value=t;const h=isH();
   $('lmode').querySelectorAll('button').forEach(b=>b.hidden=h&&b.dataset.m!=='p');
   if(h){lmode='p';cy=countyYear()}else{cy=2024;if(was)lmode='proj'}
-  $('lmp').textContent='Presidencial '+cy;
+  $('lmp').textContent=cy?'Presidencial '+cy:'';if(h&&!cy)$('lmp').hidden=true;
   $('lmode').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.m===lmode));
   selC=null;paintMap();detail();races();localMap()}
 
@@ -891,7 +891,7 @@ async function localMap(){
   const st=sel;if(!st){return}
   const x=raceOf(tab,st);
   $('ltitle').textContent=NAMES[st];
-  $('lsub').textContent='Mapa local · '+(isH()?ELABEL(tab)+(HK().o!=='P'?' · condados: presidencial '+cy:''):x?(tab==='S'?'Senado':'Gobernación'):'sin carrera de '+(tab==='S'?'Senado':'gobernador')+' en 2026');
+  $('lsub').textContent='Mapa local · '+(isH()?ELABEL(tab)+(!cy?' · sin resultados por condado':''):x?(tab==='S'?'Senado':'Gobernación'):'sin carrera de '+(tab==='S'?'Senado':'gobernador')+' en 2026');
   let D;try{D=await stData(st)}catch(e){$('lmap').innerHTML='';$('lside').innerHTML='<p class="note">No se pudo cargar el mapa de condados ('+e.message+').</p>';return}
   if(st!==sel)return;
   const svg=$('lmap');svg.setAttribute('viewBox',D.vb.join(' '));
@@ -913,13 +913,13 @@ async function localMap(){
   const sw=v=>`<i style="background:var(--${v})"></i>`,P=lmode==='p'?'d':(Lp==='I'?'i':'d');
   $('llegend').innerHTML=`<span>Margen:</span><span class="ramp">${['r3','r2','r1','tt',P+'1',P+'2',P+'3'].map(sw).join('')}</span><span>R+20 · R+10 · R+3 · ±3 · ${lmode==='p'?'D':Lp}+3 · +10 · +20</span><span>${sw('nu')}Sin datos</span>`;
   const n=Object.keys(D.c).length,nLive=Object.keys(lc).length;
-  const desc={p:isH()&&HK().o!=='P'?`No hay resultados por condado de ${ELABEL(tab)} cargados; como referencia se muestra la elección presidencial de ${cy} por condado.`:`Resultado presidencial ${cy} por condado (${PRES[cy][0].split(' ').pop()} − ${PRES[cy][1].split(' ').pop()}).`+(isH()?'':' Referencia histórica, no es esta elección.'),
+  const desc={p:!cy?`No hay resultados por condado cargados para ${ELABEL(tab)}. El detalle por estado está en el mapa nacional.`:`Resultado presidencial ${cy} por condado (${PRES[cy][0].split(' ').pop()} − ${PRES[cy][1].split(' ').pop()}).`+(isH()?'':' Referencia histórica, no es esta elección.'),
     proj:x?`Proyección por <b>swing uniforme</b>: cada condado = su margen presidencial 2024 ${f1(shift)} pts (la diferencia entre el margen ajustado de esta carrera, ${mlab(x.o.adj,Lp)}, y Trump/Harris 2024 en el estado, ${mlab(D.m24)}). Es una aproximación: los candidatos locales rinden distinto según la zona.`:'No hay carrera de este cargo en el estado; elige “Presidencial 2024”.',
     live:nLive?`${nLive} de ${n} condados con recuento.`:'Aún sin resultados por condado. Llegan del feed de condados (CNN) o de la API de AP si cargaste una clave.'};
   $('lside').innerHTML=`<p class="note">${desc[lmode]}</p>
-   <div class="stats"><div class="stat"><span>Condados</span><b>${n}</b></div><div class="stat"><span>Presidencial 2024</span><b>${mlab(D.m24)}</b></div>
+   <div class="stats"><div class="stat"><span>Condados</span><b>${n}</b></div>${isH()?"":`<div class="stat"><span>Presidencial 2024</span><b>${mlab(D.m24)}</b></div>`}
    ${x?`<div class="stat"><span>Esta carrera (ajustado)</span><b class="${mcls(x.o.adj,Lp)}">${mlab(x.o.adj,Lp)}</b></div><div class="stat"><span>Con recuento</span><b>${nLive}</b></div>`:''}</div>
-   <div class="sec" style="gap:4px"><h3>Condados con más votos (${lmode==='p'?cy:2024})</h3><div class="polls" style="max-height:230px">${Object.entries(D.c).filter(([f,c])=>ctot(c)).sort((a,b)=>ctot(b[1])-ctot(a[1])).slice(0,12).map(([f,c])=>`<div><span>${c.n}</span><span class="num">${mlab(val(f),lmode==='p'?'D':Lp)}</span></div>`).join('')}</div></div>
+   <div class="sec" style="gap:4px" ${lmode==='p'&&!cy?'hidden':''}><h3>Condados con más votos (${lmode==='p'?cy:2024})</h3><div class="polls" style="max-height:230px">${Object.entries(D.c).filter(([f,c])=>ctot(c)).sort((a,b)=>ctot(b[1])-ctot(a[1])).slice(0,12).map(([f,c])=>`<div><span>${c.n}</span><span class="num">${mlab(val(f),lmode==='p'?'D':Lp)}</span></div>`).join('')}</div></div>
    <p class="note">Mapa por condados. Resultados presidenciales por condado 2008–2024 recopilados de medios por tonmcg (no son el recuento certificado; pueden diferir levemente). Connecticut y Alaska pueden faltar porque sus datos usan otras divisiones. No incluye distritos de la Cámara: varios estados los redibujaron para 2026 y no hay mapas fiables cargados.</p>`;
   pullCounty();
 }
@@ -929,6 +929,9 @@ function selCounty(f){selC=(selC===f?null:f);$('tip').hidden=true;localMap();
   if(selC&&matchMedia('(max-width:860px)').matches)$('lside').scrollIntoView({behavior:'smooth',block:'nearest'})}
 function countyPanel(){
   const {D,x,shift,lc,Lp}=window._ctx,c=D.c[selC],v=lc[selC],st=sel,h=isH();
+  if(h&&!cy){$('lside').innerHTML=`<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${ELABEL(tab)} · ${NAMES[st]}</h3><button id="cback" style="font-size:12px;padding:3px 8px">← Estado</button></div>
+   <div class="det" style="gap:10px;padding:0"><div class="st">${c.n}</div></div><p class="note">No hay resultados por condado para esta elección.</p>
+   <div class="stats"><div class="stat"><span>Código FIPS</span><b>${selC}</b><span>Censo de EE.UU.</span></div></div>`;$('cback').onclick=()=>{selC=null;localMap()};return}
   const lcol=`var(--${Lp})`,yr=lmode==='p'||h||!x?cy:2024,hv=c.h&&c.h[yr],mm=cm(c,yr);
   const stTot=Object.values(D.c).reduce((s,z)=>s+(z.h&&z.h[yr]?z.h[yr][2]:0),0),share=hv&&stTot?hv[2]/stTot:null;
   let cands='';
@@ -968,6 +971,7 @@ function countyPanel(){
 }
 function ctip(e,f,tap){const {D,x,shift,lc,Lp}=window._ctx,c=D.c[f],v=lc[f],t=$('tip');
   if(e.pointerType==='touch'&&!tap){return}
+  if(isH()){t.innerHTML=`<b>${c.n}</b><br>`+(cy&&c.h&&c.h[cy]?`Presidencial ${cy}: ${mlab(cm(c,cy))} · ${c.h[cy][2].toLocaleString('es-UY')} votos`:'Sin resultados por condado');t.hidden=false;const w=t.offsetWidth;t.style.left=Math.max(8,Math.min(innerWidth-w-8,e.clientX+14))+'px';t.style.top=(e.clientY+14)+'px';return}
   let h=`<b>${c.n}</b><br>Presidencial 2024: ${mlab(c.m)}`+(c.t?` · ${c.t.toLocaleString('es-UY')} votos`:'');
   if(x&&c.m!=null)h+=`<br>Proyección 2026: ${mlab(c.m+shift,Lp)}`;
   if(v){const tot=v.D+v.R+(v.I||0);h+=`<br>En vivo: ${x.o.r.L.n} ${(v.D/tot*100).toFixed(1)}% · ${x.o.r.R.n} ${(v.R/tot*100).toFixed(1)}%`}
@@ -1026,7 +1030,7 @@ const OFF={P:'Presidencial',S:'Senado',G:'Gobernaciones'};
 const isH=()=>tab.length>1;
 const HK=()=>({o:tab[0],y:+tab.slice(1)});
 const ELABEL=k=>k==='S'?'Senado 2026':k==='G'?'Gobernaciones 2026':OFF[k[0]]+' '+k.slice(1);
-function countyYear(){const {o,y}=HK();if(o==='P'&&CYEARS.includes(y))return y;let b=CYEARS[0];CYEARS.forEach(c=>{if(Math.abs(c-y)<Math.abs(b-y)||(Math.abs(c-y)===Math.abs(b-y)&&c<=y))b=c});return b}
+function countyYear(){const {o,y}=HK();return o==='P'&&CYEARS.includes(y)?y:null}
 const cm=(c,y)=>c&&c.h&&c.h[y]&&c.h[y][2]?(c.h[y][0]-c.h[y][1])/c.h[y][2]*100:null;
 const ctot=c=>c.h&&c.h[lmode==='p'?cy:2024]?c.h[lmode==='p'?cy:2024][2]:0;
 // carrera principal: escaño regular (o especial si no hay), y si hubo segunda vuelta, esa
