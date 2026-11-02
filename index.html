@@ -176,6 +176,9 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 #hrtab tr.next td.w{background:var(--warnbg)}
 #hrtab tr.past td{opacity:.5}
 #hrtab tr.next td{background:var(--warnbg)}
+.srow{display:grid;grid-template-columns:10px 1fr;gap:2px 8px;padding:7px 0;border-bottom:1px solid var(--grid);font-size:12.5px;align-items:baseline}
+.srow:last-child{border-bottom:0}.srow i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.srow .sm{grid-column:2;font-size:11px;color:var(--muted)}
 /* noticias */
 .rail{display:flex;flex-direction:column;gap:18px;min-width:0}
 .news{display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
@@ -347,6 +350,10 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
  <div class="nh"><h2><i class="dot on" id="kdot"></i>Kalshi en vivo</h2>
   <div style="display:flex;gap:6px;align-items:center;justify-content:space-between"><div class="seg" id="kseg"><button class="on" data-k="S">Senado</button><button data-k="G">Gobernadores</button></div><span class="note" id="kupd"></span></div></div>
  <div class="nl" id="klist"><p class="note" style="padding:12px 0">Cargando…</p></div>
+</section>
+<section class="card news" id="srcbox" aria-label="Estado de las fuentes">
+ <div class="nh"><h2>Estado de las fuentes</h2><span class="note">Se comprueban al entrar y cada pocos minutos.</span></div>
+ <div class="nl" id="srclist"></div>
 </section>
 <section class="card news" id="hrbox" aria-label="Horarios de cierre de urnas">
  <div class="nh"><h2>Cierre de urnas</h2>
@@ -888,12 +895,13 @@ async function srcFile(){
 async function pull(){
   if(!/^https?:/.test(location.protocol)){$('fst').textContent='Abre la página desde un servidor (https) para la lectura automática.';return}
   if($('lv').value.trim()&&!auto)return;
-  const errs=[];
+  const errs=[],NM={srcCnn:'Recuento · CNN',srcAp:'Recuento · AP',srcFile:'Recuento · results.json'};
   for(const f of [srcCnn,srcAp,srcFile]){
     try{const r=await f();const n=Object.keys(r.live).length;
-      if(!n){errs.push(f.name+': 0 carreras reconocidas');continue}
+      if(!n){errs.push(f.name+': 0 carreras reconocidas');setSrc(NM[f.name],0,'responde, pero sin carreras todavía');continue}
+      setSrc(NM[f.name],1,n+' carreras');
       live=r.live;auto=true;$('fst').textContent='Automático · '+r.src+' · '+n+' carreras · '+new Date().toLocaleTimeString('es-UY');run();return}
-    catch(e){errs.push(f.name+': '+e.message)}
+    catch(e){errs.push(f.name+': '+e.message);setSrc(NM[f.name],/sin clave/.test(e.message)?null:/HTTP 404|sin results|vacío/.test(e.message)?0:-1,/sin clave/.test(e.message)?'opcional: sin clave cargada':/Failed to fetch|NetworkError|Load failed/i.test(e.message)?'el navegador no pudo conectar (CORS o bloqueo)':e.message)}
   }
   $('fst').textContent='Sin datos todavía ('+errs.join(' | ')+')';
 }
@@ -934,11 +942,13 @@ function renderNews(){
   $('nupd').textContent=NEWS.updated?'act. '+ago(NEWS.updated):'';
 }
 async function loadNews(){
-  try{const r=await fetch('news.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;NEWS=await r.json();
+  try{const r=await fetch('news.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);NEWS=await r.json();
+    const st=NEWS.status||{},okN=Object.values(st).filter(v=>typeof v==='number').length,tot=Object.keys(st).length;
+    setSrc('Noticias',NEWS.items.length?1:0,`${NEWS.items.length} titulares · ${okN}/${tot} medios responden · act. ${ago(NEWS.updated)}`);
     const srcs=[...new Set(NEWS.items.map(i=>i.src))].sort(),cur=$('nsrc').value;
     $('nsrc').innerHTML='<option value="">Todos los medios</option>'+srcs.map(s=>`<option ${s===cur?'selected':''}>${s}</option>`).join('');
     renderNews()}
-  catch(e){if(!NEWS)$('nlist').innerHTML='<p class="note" style="padding:12px 0">Las noticias se actualizan en la versión publicada en GitHub Pages (se recopilan cada pocos minutos de NYT, Washington Post, CNN, Fox News, NPR, Politico, CBS, ABC, NBC, The Hill, Axios y Google News, filtrando las que hablan de las elecciones).</p>'}
+  catch(e){if(/^https?:/.test(location.protocol))setSrc('Noticias',e.message==='HTTP 404'?0:-1,e.message==='HTTP 404'?'news.json aún no existe: el proceso automático de GitHub todavía no corrió':e.message);if(!NEWS)$('nlist').innerHTML='<p class="note" style="padding:12px 0">Las noticias se actualizan en la versión publicada en GitHub Pages (se recopilan cada pocos minutos de NYT, Washington Post, CNN, Fox News, NPR, Politico, CBS, ABC, NBC, The Hill, Axios y Google News, filtrando las que hablan de las elecciones).</p>'}
 }
 $('nsrc').onchange=renderNews;loadNews();setInterval(loadNews,180000);setInterval(renderNews,60000);
 
@@ -1157,6 +1167,14 @@ const EVTOT=(()=>{let D=0,R=0;Object.keys(STIDX).forEach(s=>{const z=P24(s);if(z
   ys.forEach(y=>{const g=document.createElement('optgroup');g.label=String(y);['P','S','G'].forEach(o=>{if(HIST[o+y])g.append(new Option(OFF[o]+' '+y,o+y))});s.append(g)});
   s.value='';s.onchange=()=>{if(s.value)setTab(s.value)}})();
 
+
+/* ---------- estado de las fuentes ---------- */
+const SRC={};
+function setSrc(n,ok,msg){SRC[n]={ok,msg,t:Date.now()};const el=$('srclist');if(!el)return;
+  const ord=['Noticias','Kalshi','Recuento · CNN','Recuento · AP','Recuento · results.json'];
+  el.innerHTML=Object.keys(SRC).sort((a,b)=>ord.indexOf(a)-ord.indexOf(b)).map(k=>{const s=SRC[k],c=s.ok===1?'#1E9E5A':s.ok===0?'var(--warn)':s.ok===null?'var(--muted)':'var(--live)';
+    const lab=s.ok===1?'Funciona':s.ok===0?'Pendiente':s.ok===null?'No configurado':'Falla';
+    return `<div class="srow"><i style="background:${c}"></i><span><b>${k}</b> · ${lab}</span><span class="sm">${s.msg||''} · ${new Date(s.t).toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'})}</span></div>`}).join('')}
 /* ---------- transmisión en vivo (YouTube) ---------- */
 const TV=[
  ['ABC News Live','UCBi2mrWuNuyYy4gbM6fU18Q','ABCNews'],
@@ -1235,7 +1253,29 @@ function kalRender(){
      <div class="kb"><div style="flex:${k.L};background:var(--${L})"></div><div style="flex:${k.R};background:var(--R)"></div></div><span class="km">${r.L.n} vs ${r.R.n} · modelo de esta página: ${pc(p)}</span></div>`}).join(''):'<p class="note" style="padding:12px 0">Sin mercados de Kalshi para estas carreras.</p>');
   $('kupd').textContent=KAL.updated?'act. '+ago(KAL.updated):'';
 }
-async function loadKal(){try{const r=await fetch('kalshi.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;KAL=await r.json()}catch(e){}if(res)kalRender();detail()}
+const KBASE='https://api.elections.kalshi.com/trade-api/v2';
+const kNum=(m,...ks)=>{for(const k of ks){let v=m[k];if(v==null||v==='')continue;v=parseFloat(v);if(isNaN(v))continue;return !k.endsWith('_dollars')&&v>1?v/100:v}return null};
+const kParty=m=>{const t=(m.ticker||'').toUpperCase(),s=[m.yes_sub_title,m.subtitle,m.title].join(' ').toLowerCase();
+  return /-D$|-DEM/.test(t)||s.includes('democrat')?'D':/-R$|-REP|-GOP/.test(t)||s.includes('republican')?'R':/-I$|-IND/.test(t)||s.includes('independent')?'I':null};
+let kDirect=null;
+async function kalDirect(){
+  const evs=['CONTROLS-2026','CONTROLH-2026',...DATA.senate.map(kalKey),...DATA.gov.map(kalKey)],out={};let ok=0;
+  const one=async ev=>{try{const r=await fetch(`${KBASE}/events/${ev}?with_nested_markets=true`);if(!r.ok)return;const j=await r.json();
+    const mk=j.markets||(j.event&&j.event.markets)||[];const ms=[];
+    mk.forEach(m=>{const p=kParty(m),b=kNum(m,'yes_bid_dollars','yes_bid'),a=kNum(m,'yes_ask_dollars','yes_ask'),l=kNum(m,'last_price_dollars','last_price');
+      const pr=b!=null&&a!=null&&a>0?(b+a)/2:l;if(p&&pr!=null)ms.push({party:p,p:pr})});
+    const ser=ev.split('-')[0].toLowerCase();out[ev]={url:'https://kalshi.com/markets/'+(ev==='CONTROLS-2026'?'controls/senate-winner/controls-2026':ser+'/-/'+ev.toLowerCase()),markets:ms};if(ms.length)ok++}catch(e){}};
+  for(let i=0;i<evs.length;i+=8)await Promise.all(evs.slice(i,i+8).map(one));
+  return ok?{updated:new Date().toISOString(),events:out,direct:true,ok}:null}
+async function loadKal(){
+  if(kDirect!==false&&/^https?:/.test(location.protocol)){
+    try{const t=await fetch(`${KBASE}/events/CONTROLS-2026?with_nested_markets=true`);if(!t.ok)throw new Error('HTTP '+t.status);
+      const k=await kalDirect();if(k){KAL=k;kDirect=true;setSrc('Kalshi',1,`directo desde la API · ${k.ok} mercados`)}else throw new Error('sin mercados')}
+    catch(e){kDirect=false}}
+  if(!kDirect){try{const r=await fetch('kalshi.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);KAL=await r.json();
+      const n=Object.values(KAL.events||{}).filter(e=>e.markets&&e.markets.length).length;setSrc('Kalshi',n?1:0,`vía kalshi.json · ${n} mercados · act. ${ago(KAL.updated)}`)}
+    catch(e){if(/^https?:/.test(location.protocol))setSrc('Kalshi',e.message==='HTTP 404'?0:-1,'el navegador no puede leer la API directa'+(e.message==='HTTP 404'?' y kalshi.json aún no existe (el proceso automático no corrió)':': '+e.message))}}
+  if(res)kalRender();detail()}
 $('kseg').querySelectorAll('button').forEach(b=>b.onclick=()=>{kTab=b.dataset.k;$('kseg').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b));kalRender()});
 // 4 artículos visibles en noticias
 const fitNews=()=>{const it=[...document.querySelectorAll('#nlist .ni')].slice(0,4);if(it.length===4){const top=it[0].offsetTop,b=it[3].offsetTop+it[3].offsetHeight;$('nlist').style.maxHeight=(b-top+2)+'px'}};
