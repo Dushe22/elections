@@ -1182,7 +1182,9 @@ const TV=[
 TV.forEach(([n],i)=>$('tvsel').add(new Option(n,i)));
 function tvShow(src,link,note){
   $('tvbox').innerHTML=`<button id="tvplay" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font:700 18px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.04em"><span style="width:64px;height:44px;border-radius:12px;background:#D3322B;display:flex;align-items:center;justify-content:center"><span style="border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:4px"></span></span>Watch ${$('tvsel').selectedOptions[0]?$('tvsel').selectedOptions[0].text:'stream'}</button>`;
-  $('tvplay').onclick=()=>{$('tvbox').innerHTML=`<iframe src="${src}" title="Live broadcast" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`};
+  $('tvplay').onclick=()=>{const s2=src+(src.includes('?')?'&':'?')+'enablejsapi=1&playsinline=1'+(/^https?:/.test(location.protocol)?'&origin='+encodeURIComponent(location.origin):'');
+    $('tvbox').innerHTML=`<iframe id="tvif" src="${s2}" title="Live broadcast" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    tvWatch(link)};
   $('tvlink').href=link;$('tvnote').textContent=note||'';
 }
 function tvPick(i){const [n,id,h]=TV[i];try{localStorage.setItem('tv',i)}catch(e){}
@@ -1194,6 +1196,16 @@ $('tvform').onsubmit=e=>{e.preventDefault();const u=$('tvurl').value.trim();
   tvShow(`https://www.youtube.com/embed/${m[1]}?autoplay=1`,`https://www.youtube.com/watch?v=${m[1]}`,'Manually chosen stream.')};
 (()=>{let i=0;try{i=+(localStorage.getItem('tv')||0)}catch(e){}if(!TV[i])i=0;$('tvsel').value=i;tvPick(i)})();
 
+
+// Si YouTube no permite el video incrustado (errores 100/101/150/153), mostrar el enlace directo
+function tvFail(link){$('tvbox').innerHTML=`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#000;color:#fff;text-align:center;padding:20px">
+  <p style="margin:0;max-width:46ch;font-size:15px">This channel does not allow its stream to be played outside YouTube, or it is not live right now.</p>
+  <a href="${link}" target="_blank" rel="noopener" style="background:#D3322B;color:#fff;padding:10px 18px;border-radius:4px;font-weight:700;text-decoration:none">Watch on YouTube ↗</a>
+  <span style="font-size:12px;color:#aaa">You can also pick another channel or paste a video link.</span></div>`}
+let ytReady=null;
+function ytApi(){if(ytReady)return ytReady;ytReady=new Promise(ok=>{if(window.YT&&YT.Player)return ok();window.onYouTubeIframeAPIReady=ok;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>ok(null);document.head.appendChild(s)});return ytReady}
+async function tvWatch(link){try{await ytApi();if(!window.YT||!YT.Player||!$('tvif'))return;
+  new YT.Player('tvif',{events:{onError:()=>tvFail(link)}})}catch(e){}}
 /* ---------- horarios de cierre ---------- */
 const WAVES=[
  ['2026-11-03T23:00:00Z','First closings','Eastern Indiana and Kentucky.'],
