@@ -1,4 +1,4 @@
-name: Actualizar noticias y resultados
+name: Actualizar noticias, Kalshi y resultados
 on:
   schedule:
     - cron: "*/5 * * * *"   # GitHub puede retrasarlo varios minutos
@@ -13,6 +13,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Noticias (RSS de medios de EE.UU.)
         run: python3 news.py || true
+      - name: Kalshi (cotizaciones públicas)
+        run: python3 kalshi.py || true
       - name: Resultados AP (sólo 3-5 nov UTC y si hay clave)
         env:
           AP_API_KEY: ${{ secrets.AP_API_KEY }}
@@ -23,5 +25,5 @@ jobs:
       - name: Commit si cambió
         run: |
           git config user.name "github-actions"; git config user.email "actions@users.noreply.github.com"
-          git add news.json results.json
+          git add news.json results.json kalshi.json
           git diff --cached --quiet || (git commit -m "datos: noticias/resultados" && git pull --rebase -q && git push)

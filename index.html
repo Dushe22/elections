@@ -174,12 +174,25 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 #hrtab tr.past td{opacity:.5}
 #hrtab tr.next td{background:var(--warnbg)}
 /* noticias */
-.news{position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
-@media (max-width:1100px){.news{position:static;max-height:none}}
+.rail{display:flex;flex-direction:column;gap:18px;min-width:0}
+.news{display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
 .news .nh{padding:12px 14px 10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
 .news .nh h2{font-size:20px;display:flex;gap:8px;align-items:center}
 .news .nl{overflow:auto;padding:0 14px}
-@media (max-width:1100px){.news .nl{max-height:520px}}
+#nlist{max-height:380px}
+.kr{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--grid);font-size:13px}
+.kr:last-child{border-bottom:0}
+.kr .kb{grid-column:1/-1;display:flex;height:6px;gap:1px;background:var(--chip)}
+.kr .km{grid-column:1/-1;font-size:11px;color:var(--muted)}
+.hw{display:grid;grid-template-columns:58px 1fr;gap:2px 10px;padding:8px 0;border-bottom:1px solid var(--grid)}
+.hw:last-child{border-bottom:0}
+.hw.past{opacity:.45}.hw.next{background:var(--warnbg);margin:0 -14px;padding:8px 14px}
+.hw b{font:700 20px 'Barlow Condensed',sans-serif;line-height:1}
+.hw .et{font-size:10.5px;color:var(--muted)}
+.hw .tx{font-size:12px;color:var(--fg2);line-height:1.35}
+#kseg{flex-wrap:nowrap}
+#kseg button{font-size:13px;padding:3px 6px;white-space:nowrap}
+#kupd,#nupd,#hrcount{text-align:right;font-size:11px}
 .ni{display:flex;flex-direction:column;gap:3px;padding:10px 0;border-bottom:1px solid var(--grid)}
 .ni:last-child{border-bottom:0}
 .ni a{color:var(--fg);text-decoration:none;font-weight:600;font-size:14px;line-height:1.3}
@@ -256,14 +269,6 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
   </div>
 </section>
 
-<section class="sec" id="hrsec">
-  <div class="sechead"><h2>Horarios de cierre de urnas</h2><span class="note" id="hrcount"></span></div>
-  <div class="card sec" style="gap:12px">
-    <div class="chips" id="hrzones" style="margin:0" aria-label="Zonas horarias"></div>
-    <div class="tw" style="border:0"><table id="hrtab"></table></div>
-    <p class="note">Martes 3 de noviembre de 2026 (EE.UU. ya está en horario de invierno). Horarios aproximados: varios estados cierran en dos momentos por tener dos husos horarios, y cada estado puede cambiar los suyos; consulta la autoridad electoral de cada estado. Toca los países para mostrarlos u ocultarlos.</p>
-  </div>
-</section>
 <section class="sec" id="livesec">
   <div class="sechead"><h2><i class="dot" id="ldot2" style="display:inline-block;margin:0 8px 0 2px;vertical-align:4px"></i>Resultados en vivo</h2><span class="note" id="lupd"></span></div>
   <div class="two" id="livetop"></div>
@@ -325,14 +330,28 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 <li>Recuento: feed público de CNN (datos AP), <a href="https://developer.ap.org/ap-elections-api/">AP Elections API</a>; certificación por cada estado.</li>
 <li>Elecciones 1998–2024 por estado: <a href="https://github.com/fivethirtyeight/election-results">538 election-results</a> (a partir de fuentes estatales oficiales).</li>
 <li>Presidenciales por condado 2008–2024: <a href="https://github.com/tonmcg/US_County_Level_Election_Results_08-24">tonmcg</a> (recopilados de medios; no certificados, pueden diferir levemente).</li>
+<li>Mercados de predicción: <a href="https://kalshi.com/markets/controls/senate-winner/controls-2026">Kalshi</a> (precio del contrato ≈ probabilidad implícita; no es una encuesta ni un pronóstico de esta página).</li>
 <li>Mapa: us-atlas (U.S. Census Bureau), simplificado.</li>
 </ul></div></details>
 </div>
+<div class="rail">
 <aside class="card news" id="newsbox" aria-label="Últimas noticias">
  <div class="nh"><h2><i class="dot" id="ndot" style="background:var(--live)"></i>Últimas noticias</h2>
  <div style="display:flex;gap:6px;align-items:center;justify-content:space-between"><select id="nsrc" aria-label="Medio" style="font-size:12px;padding:4px 6px"><option value="">Todos los medios</option></select><span class="note" id="nupd"></span></div></div>
  <div class="nl" id="nlist"><p class="note" style="padding:12px 0">Cargando…</p></div>
 </aside>
+<section class="card news" id="kbox" aria-label="Kalshi en vivo">
+ <div class="nh"><h2><i class="dot on" id="kdot"></i>Kalshi en vivo</h2>
+  <div style="display:flex;gap:6px;align-items:center;justify-content:space-between"><div class="seg" id="kseg"><button class="on" data-k="S">Senado</button><button data-k="G">Gobernadores</button></div><span class="note" id="kupd"></span></div></div>
+ <div class="nl" id="klist"><p class="note" style="padding:12px 0">Cargando…</p></div>
+</section>
+<section class="card news" id="hrbox" aria-label="Horarios de cierre de urnas">
+ <div class="nh"><h2>Cierre de urnas</h2>
+  <div style="display:flex;gap:6px;align-items:center;justify-content:space-between"><select id="hrz" aria-label="Zona horaria" style="font-size:12px;padding:4px 6px;max-width:190px"></select><span class="note" id="hrcount"></span></div></div>
+ <div class="nl" id="hrlist"></div>
+ <p class="note" style="padding:8px 14px 12px;border-top:1px solid var(--line)">Martes 3/11/2026 (EE.UU. en horario de invierno). Aproximado: algunos estados cierran en dos momentos por tener dos husos horarios.</p>
+</section>
+</div>
 </div>
 </div>
 
@@ -687,6 +706,7 @@ function detail0(){
    <div class="stat"><span>Con sesgo histórico</span><b class="${mcls(o.adj,L)}">${mtxt(o.adj,o)}</b><span>resta ${f1(o.bias,2)}</span></div>
    <div class="stat"><span>Presidencial 2024</span><b>${STIDX[sel]&&STIDX[sel].m24!=null?mlab(STIDX[sel].m24):'—'}</b><span>Harris − Trump</span></div>
    <div class="stat"><span>Agregador</span><b>${extm===null?'—':f1(extm)}</b><span>${r.ext?r.ext.src:'sin datos'}</span></div>
+   ${(()=>{const k=kalFor(r);return k?`<div class="stat"><span>Kalshi (mercado)</span><b class="${k.L>=.5?L:'R'}">${Math.round(Math.max(k.L,k.R)*100)}% ${k.L>=.5?r.L.n:r.R.n}</b><span><a href="${k.url}" target="_blank" rel="noopener">ver mercado ↗</a></span></div>`:''})()}
    <div class="stat"><span>Base</span><b style="font-size:13px">${e.srcMain==='polls'?r.polls.length+' encuestas'+(e.blend?' + agreg.':''):e.srcMain==='ext'?'Agregador':'Sólo Cook'}</b><span>σ ${e.sigma.toFixed(1)}</span></div>
   </div>
   ${polls.length?`<div class="sec" style="gap:6px"><h3>Encuestas (${polls.length})</h3><div class="polls">${polls.map(q=>{const fav=q.sp==='D'?r.L.p:q.sp==='R'?r.R.p:null,fn=q.sp==='D'?r.L.n:r.R.n;return `<div><span>${q.p}${fav?` <span class="spn" title="Encargada por un grupo afín a ${fn}">${PI(fav,13)}</span>`:''} <span class="note">${q.d.slice(8)}/${q.d.slice(5,7)}</span></span><span class="num">${q.L}–${q.R}</span></div>`}).join('')}</div></div>`:''}
@@ -728,7 +748,7 @@ function render(){
   hist('hsen',res.senate.dist,38,62,51,i=>i>=51?'var(--D)':'var(--R)');
   hist('hhou',res.house.hist,180,290,218,i=>i>=218?'var(--D)':'var(--R)');
   if(!sel&&!cleared){let b=null;res.races.forEach((o,i)=>{if(o.r.kind===tab&&(!b||Math.abs(res.p[i]-.5)<b.d))b={st:o.r.st,d:Math.abs(res.p[i]-.5)}});sel=b&&b.st}
-  paintMap();detail();ext();generic();races();liveSection();localMap();
+  paintMap();detail();ext();generic();races();liveSection();localMap();if(typeof kalRender==='function'&&KAL!==undefined)try{kalRender()}catch(e){}
 }
 function ext(){
   const rows=[...DATA.genericExt.map(e=>[e.src,e.D-e.R,false]),['Esta página',res.gen.m,true],['Promedio simple',res.gen.simple,false]];
@@ -1179,22 +1199,43 @@ const ZONES=[
  ['America/Mexico_City','México (centro)',1],['America/Guatemala','Centroamérica',0],['America/Havana','Cuba',0],['America/Santo_Domingo','Rep. Dominicana / Puerto Rico',0],
  ['Europe/Madrid','España',1],['Europe/London','Reino Unido',0],['Europe/Berlin','Alemania / Francia / Italia',0],['Europe/Moscow','Rusia (Moscú)',0],
  ['Asia/Kolkata','India',0],['Asia/Shanghai','China',0],['Asia/Tokyo','Japón',0],['Australia/Sydney','Australia (Sídney)',0]];
-let hrOn=null;try{hrOn=JSON.parse(localStorage.getItem('hrz')||'null')}catch(e){}
-if(!Array.isArray(hrOn))hrOn=ZONES.filter(z=>z[2]).map(z=>z[0]);
 const myTZ=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return null}})();
 function hfmt(d,tz){const o={hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz};const day={weekday:'short',timeZone:tz};
   const hm=new Intl.DateTimeFormat('es',o).format(d),wd=new Intl.DateTimeFormat('es',day).format(d).replace('.','');return {hm,wd}}
+(()=>{const s=$('hrz');if(myTZ&&!ZONES.some(z=>z[0]===myTZ))s.add(new Option('Tu hora ('+myTZ.split('/').pop().replace(/_/g,' ')+')',myTZ));
+  ZONES.forEach(([tz,n])=>s.add(new Option(n,tz)));let v=null;try{v=localStorage.getItem('hrz1')}catch(e){}
+  s.value=v&&[...s.options].some(o=>o.value===v)?v:(myTZ&&[...s.options].some(o=>o.value===myTZ)?myTZ:'America/New_York');
+  s.onchange=()=>{try{localStorage.setItem('hrz1',s.value)}catch(e){}hrRender()}})();
 function hrRender(){
-  $('hrzones').innerHTML=ZONES.map(([tz,n])=>`<button type="button" data-tz="${tz}" class="${hrOn.includes(tz)?'on':''}" aria-pressed="${hrOn.includes(tz)}">${n}</button>`).join('');
-  $('hrzones').querySelectorAll('button').forEach(b=>b.onclick=()=>{const z=b.dataset.tz;hrOn=hrOn.includes(z)?hrOn.filter(x=>x!==z):[...hrOn,z];try{localStorage.setItem('hrz',JSON.stringify(hrOn))}catch(e){}hrRender()});
-  const cols=ZONES.filter(z=>hrOn.includes(z[0]));const mine=myTZ&&!cols.some(z=>z[0]===myTZ);
-  const now=Date.now();let next=WAVES.findIndex(w=>new Date(w[0])>now);
-  $('hrtab').innerHTML=`<tr><th>Cierran</th>${mine?'<th class="n">Tu hora</th>':''}${cols.map(z=>`<th class="n">${z[1]}</th>`).join('')}</tr>`+
-   WAVES.map(([iso,lab,txt],i)=>{const d=new Date(iso);const cell=tz=>{const f=hfmt(d,tz);return `<td class="n"><b class="num">${f.hm}</b> <span class="note">${f.wd}</span></td>`};
-    return `<tr class="${new Date(iso)<now?'past':i===next?'next':''}"><td class="w">${lab?`<b>${lab}.</b> `:''}${txt}</td>${mine?cell(myTZ):''}${cols.map(z=>cell(z[0])).join('')}</tr>`}).join('');
-  if(next<0)$('hrcount').textContent='Ya cerraron todas las urnas';
-  else{const ms=new Date(WAVES[next][0])-now,h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000);$('hrcount').textContent=(next===0?'Primer cierre':'Próximo cierre')+' en '+(h>=24?Math.floor(h/24)+' d '+(h%24)+' h':h+' h '+m+' min')}
+  const tz=$('hrz').value,now=Date.now(),next=WAVES.findIndex(w=>new Date(w[0])>now);
+  $('hrlist').innerHTML=WAVES.map(([iso,lab,txt],i)=>{const d=new Date(iso),f=hfmt(d,tz),e=hfmt(d,'America/New_York');
+    return `<div class="hw ${d<now?'past':i===next?'next':''}"><div><b class="num">${f.hm}</b><div class="et">${f.wd}${tz!=='America/New_York'?' · '+e.hm+' ET':''}</div></div><div class="tx">${lab?`<b style="font:700 12px 'Libre Franklin',sans-serif">${lab}.</b> `:''}${txt}</div></div>`}).join('');
+  if(next<0)$('hrcount').textContent='Cerraron todas';
+  else{const ms=new Date(WAVES[next][0])-now,h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000);$('hrcount').textContent=(next===0?'1.º cierre':'Próximo')+' en '+(h>=24?Math.floor(h/24)+' d '+(h%24)+' h':h+' h '+m+' min')}
 }
 hrRender();setInterval(hrRender,60000);
-buildMap();histCharts();run();
+
+/* ---------- Kalshi (mercado de predicción) ---------- */
+let KAL=null,kTab='S';
+const kalKey=r=>r.kind==='S'?'SENATE'+r.st+(/especial/i.test(r.name)?'S':'')+'-26':'GOVPARTY'+r.st+'-26';
+function kalFor(r){if(!KAL||!KAL.events)return null;const e=KAL.events[kalKey(r)];if(!e||!e.markets)return null;
+  const g=p=>{const m=e.markets.find(x=>x.party===p);return m?m.p:null};let L=g(r.L.p),R=g(r.R.p);
+  if(L==null&&R!=null)L=1-R;if(R==null&&L!=null)R=1-L;if(L==null)return null;const s=L+R;return {L:L/s,R:R/s,url:e.url,raw:[L,R]}}
+function kalRender(){
+  if(!KAL){$('klist').innerHTML='<p class="note" style="padding:12px 0">Las cotizaciones de Kalshi se actualizan en la versión publicada en GitHub Pages (cada pocos minutos).</p>';return}
+  const ctl=KAL.events['CONTROLS-2026'],ctlH=KAL.events['CONTROLH-2026'];
+  const cRow=(e,n)=>{if(!e||!e.markets)return '';const d=(e.markets.find(m=>m.party==='D')||{}).p,r=(e.markets.find(m=>m.party==='R')||{}).p;if(d==null)return '';
+    return `<div class="kr"><span><b>${n}</b></span><span class="num"><b class="D">${Math.round(d*100)}%</b> ${PI('D',12)} · <b class="R">${Math.round((r!=null?r:1-d)*100)}%</b> ${PI('R',12)}</span><div class="kb"><div style="flex:${d};background:var(--D)"></div><div style="flex:${r!=null?r:1-d};background:var(--R)"></div></div></div>`};
+  const rows=res.races.map((o,i)=>({o,p:res.p[i],k:kalFor(o.r)})).filter(x=>x.o.r.kind===kTab&&x.k).sort((a,b)=>Math.abs(a.k.L-.5)-Math.abs(b.k.L-.5));
+  $('klist').innerHTML=(kTab==='S'?cRow(ctl,'Control del Senado')+cRow(ctlH,'Control de la Cámara'):'')+
+   (rows.length?rows.map(({o,p,k})=>{const r=o.r,L=r.L.p;return `<div class="kr"><a href="${k.url}" target="_blank" rel="noopener" style="color:var(--fg);text-decoration:none"><b>${r.name}</b></a><span class="num">${PI(L,12)} <b class="${L}">${Math.round(k.L*100)}%</b></span>
+     <div class="kb"><div style="flex:${k.L};background:var(--${L})"></div><div style="flex:${k.R};background:var(--R)"></div></div><span class="km">${r.L.n} vs ${r.R.n} · modelo de esta página: ${pc(p)}</span></div>`}).join(''):'<p class="note" style="padding:12px 0">Sin mercados de Kalshi para estas carreras.</p>');
+  $('kupd').textContent=KAL.updated?'act. '+ago(KAL.updated):'';
+}
+async function loadKal(){try{const r=await fetch('kalshi.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;KAL=await r.json()}catch(e){}if(res)kalRender();detail()}
+$('kseg').querySelectorAll('button').forEach(b=>b.onclick=()=>{kTab=b.dataset.k;$('kseg').querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b));kalRender()});
+// 4 artículos visibles en noticias
+const fitNews=()=>{const it=[...document.querySelectorAll('#nlist .ni')].slice(0,4);if(it.length===4){const top=it[0].offsetTop,b=it[3].offsetTop+it[3].offsetHeight;$('nlist').style.maxHeight=(b-top+2)+'px'}};
+new MutationObserver(fitNews).observe($('nlist'),{childList:true});addEventListener('resize',fitNews);
+buildMap();histCharts();run();loadKal();setInterval(loadKal,120000);
 </script>
