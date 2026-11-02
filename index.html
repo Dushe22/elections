@@ -200,6 +200,18 @@ textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,monospace;fo
 
 <section class="score" id="score"></section>
 
+<section class="sec" id="tvsec">
+  <div class="sechead"><h2><i class="dot on" style="display:inline-block;margin:0 8px 0 2px;vertical-align:4px"></i>Transmisión en vivo</h2>
+  <label class="esel"><select id="tvsel" aria-label="Canal"></select></label></div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div id="tvbox" style="position:relative;aspect-ratio:16/9;max-width:100%;background:#000"></div>
+    <div style="display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center;padding:10px 14px;border-top:1px solid var(--line)">
+      <a id="tvlink" target="_blank" rel="noopener" style="font-size:13px;font-weight:600">Abrir en YouTube ↗</a>
+      <span class="note" id="tvnote"></span>
+      <form id="tvform" style="display:flex;gap:6px;margin-left:auto;min-width:0;flex:1 1 260px;max-width:420px"><input id="tvurl" placeholder="Pegar otro enlace de YouTube…" style="flex:1;min-width:0;font-size:13px"><button>Ver</button></form>
+    </div>
+  </div>
+</section>
 <section class="card" style="display:flex;flex-direction:column;gap:10px">
   <div class="ctl">
     <label>Supuesto de error de las encuestas<select id="scen"></select></label>
@@ -1100,5 +1112,30 @@ const EVTOT=(()=>{let D=0,R=0;Object.keys(STIDX).forEach(s=>{const z=P24(s);if(z
   const ys=[...new Set(Object.keys(HIST).map(k=>+k.slice(1)))].sort((a,b)=>b-a);
   ys.forEach(y=>{const g=document.createElement('optgroup');g.label=String(y);['P','S','G'].forEach(o=>{if(HIST[o+y])g.append(new Option(OFF[o]+' '+y,o+y))});s.append(g)});
   s.value='';s.onchange=()=>{if(s.value)setTab(s.value)}})();
+
+/* ---------- transmisión en vivo (YouTube) ---------- */
+const TV=[
+ ['ABC News Live','UCBi2mrWuNuyYy4gbM6fU18Q','ABCNews'],
+ ['NBC News NOW','UCeY0bbntWzzVIaj2z3QigXg','NBCNews'],
+ ['CBS News 24/7','UC8p1vwvWtl6T73JiExfWs1g','CBSNews'],
+ ['LiveNOW from FOX','UCJg9wBPyKMNA5sRDnvzmkdg','LiveNOWFOX'],
+ ['PBS NewsHour','UC6ZFN9Tx6xh-skXCuRHCDpQ','PBSNewsHour'],
+ ['C-SPAN','UCb--64Gl51jIEVE-GLDAVTg','cspan'],
+ ['Bloomberg Television','UCIALMKvObZNtJ6AmdCLP7Lg','BloombergTelevision'],
+ ['Reuters','UChqUTb7kYRX8-EiaN3XFrSQ','Reuters']];
+TV.forEach(([n],i)=>$('tvsel').add(new Option(n,i)));
+function tvShow(src,link,note){
+  $('tvbox').innerHTML=`<button id="tvplay" style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font:700 18px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.04em"><span style="width:64px;height:44px;border-radius:12px;background:#D3322B;display:flex;align-items:center;justify-content:center"><span style="border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:4px"></span></span>Ver ${$('tvsel').selectedOptions[0]?$('tvsel').selectedOptions[0].text:'transmisión'}</button>`;
+  $('tvplay').onclick=()=>{$('tvbox').innerHTML=`<iframe src="${src}" title="Transmisión en vivo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`};
+  $('tvlink').href=link;$('tvnote').textContent=note||'';
+}
+function tvPick(i){const [n,id,h]=TV[i];try{localStorage.setItem('tv',i)}catch(e){}
+  tvShow(`https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1`,`https://www.youtube.com/@${h}/live`,'Si el canal no está transmitiendo en este momento, el reproductor dirá que no hay video: prueba otro canal o el enlace.')}
+$('tvsel').onchange=()=>tvPick(+$('tvsel').value);
+$('tvform').onsubmit=e=>{e.preventDefault();const u=$('tvurl').value.trim();
+  const m=u.match(/(?:v=|youtu\.be\/|\/live\/|\/embed\/|\/shorts\/)([\w-]{11})/);
+  if(!m){$('tvnote').textContent='No reconozco ese enlace: pega uno de un video o transmisión de YouTube.';return}
+  tvShow(`https://www.youtube.com/embed/${m[1]}?autoplay=1`,`https://www.youtube.com/watch?v=${m[1]}`,'Transmisión elegida a mano.')};
+(()=>{let i=0;try{i=+(localStorage.getItem('tv')||0)}catch(e){}if(!TV[i])i=0;$('tvsel').value=i;tvPick(i)})();
 buildMap();histCharts();run();
 </script>
