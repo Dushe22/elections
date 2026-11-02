@@ -1,0 +1,509 @@
+<title>Midterms EE.UU. 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F6F5F1;--panel:#FFFFFF;--fg:#1B1D22;--fg2:#4A4E57;--muted:#767A84;--line:#E2E0D9;--grid:#ECEAE3;
+--D:#2F6DB5;--R:#C4483D;--I:#7A5BA8;--warn:#9A6A00;--warnbg:#FBF1D6;--chip:#EFEDE6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161A;--panel:#1C1F25;--fg:#ECEDEF;--fg2:#B5B9C2;--muted:#8A8E98;--line:#2C3038;--grid:#252930;
+--D:#5E92D0;--R:#D9665B;--I:#9D7FD0;--warn:#E5B94A;--warnbg:#332A12;--chip:#252930;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14161A;--panel:#1C1F25;--fg:#ECEDEF;--fg2:#B5B9C2;--muted:#8A8E98;--line:#2C3038;--grid:#252930;
+--D:#5E92D0;--R:#D9665B;--I:#9D7FD0;--warn:#E5B94A;--warnbg:#332A12;--chip:#252930;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 'Schibsted Grotesk',system-ui,sans-serif;margin:0;
+padding-block:20px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.1;margin:0;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:20px;margin:0 0 4px;letter-spacing:-.01em}
+h3{font-size:14px;margin:0 0 8px;color:var(--fg2);font-weight:600}
+p{margin:0}
+.sub{color:var(--fg2);max-width:70ch}
+.mono,td.n,.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.D{color:var(--D)}.R{color:var(--R)}.I{color:var(--I)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.ctl{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:end}
+.ctl label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--fg2)}
+select,input,textarea,button{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+button{cursor:pointer;background:var(--chip)}button:hover{border-color:var(--muted)}
+input[type=range]{padding:0;width:170px}
+.chk{flex-direction:row!important;align-items:center;gap:6px!important}
+.big{font-size:44px;line-height:1;font-weight:700;letter-spacing:-.03em}
+.kv{display:flex;gap:6px 18px;flex-wrap:wrap;color:var(--fg2);font-size:13px;margin-top:8px}
+.bar{display:flex;height:14px;border-radius:4px;overflow:hidden;gap:2px;margin-top:10px}
+.bar>div{min-width:2px}
+.note{font-size:12.5px;color:var(--muted)}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:13px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;background:var(--panel)}
+td.n,th.n{text-align:right}
+tr:last-child td{border-bottom:0}
+tr.rw{cursor:pointer}tr.rw:hover{background:var(--chip)}
+tr.sub td{background:var(--chip);white-space:normal;font-size:12.5px;color:var(--fg2)}
+.pb{display:inline-block;width:70px;height:8px;border-radius:4px;background:var(--R);vertical-align:middle;overflow:hidden;margin-right:6px}
+.pb>i{display:block;height:100%;background:var(--D)}
+.tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;background:var(--chip);color:var(--fg2)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}.tabs button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+svg text{font-family:'IBM Plex Mono',monospace;font-size:10.5px;fill:var(--muted)}
+details summary{cursor:pointer;color:var(--fg2)}
+textarea{width:100%;min-height:120px;font-family:'IBM Plex Mono',monospace;font-size:12px}
+.src li{margin:3px 0}a{color:var(--D)}
+</style>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:8px">
+<span class="tag" style="align-self:flex-start">Elecciones del martes 3 de noviembre de 2026 · datos al <span id="asof"></span></span>
+<h1>Midterms EE.UU. 2026: encuestas unificadas y probabilidades de control</h1>
+<p class="sub">Une encuestas de distintas casas corrigiendo su sesgo, estima márgenes de error, y aplica los sesgos históricos de las encuestas frente al resultado oficial. Durante la noche electoral admite resultados parciales pegados en formato AP.</p>
+</header>
+
+<section class="panel">
+<div class="ctl">
+<label>Escenario de error histórico
+<select id="scen"></select></label>
+<label><span>Ajuste manual (pts): <b id="cv" class="num">—</b></span>
+<input type="range" id="cust" min="-6" max="6" step="0.25" value="0"><span class="note">sólo con “personalizado”</span></label>
+<label><span>Error nacional común σ: <b id="sv" class="num"></b> pts</span>
+<input type="range" id="sig" min="0.5" max="5" step="0.25" value="2.5"></label>
+<label class="chk"><input type="checkbox" id="oh" checked>efecto de casa</label>
+<label class="chk"><input type="checkbox" id="osp" checked>patrocinador</label>
+<label class="chk"><input type="checkbox" id="oq" checked>calidad</label>
+</div>
+<p class="note" style="margin-top:10px" id="scdesc"></p>
+</section>
+
+<section id="ctrl" class="grid"></section>
+<div class="warn" id="warn">La Cámara usa un modelo <b>simplificado</b> (generic ballot → bancas), no distrito por distrito. Esto no es una fuente oficial: el recuento oficial es el de cada estado y lo certifica cada estado; aquí se usa AP para el recuento en vivo.</div>
+
+<section class="grid">
+<div class="panel"><h2>Senado: bancas demócratas</h2><p class="note">Distribución de 20 000 simulaciones (34 bancas D no en juego). Azul = 51 o más.</p><div id="hsen"></div></div>
+<div class="panel"><h2>Cámara: bancas demócratas</h2><p class="note">Modelo simplificado. Línea = 218 (mayoría).</p><div id="hhou"></div></div>
+</section>
+
+<section>
+<h2>Pronósticos publicados (referencia)</h2>
+<p class="note" style="margin-bottom:8px">Promedios de generic ballot de agregadores, para contrastar con el unificado de aquí.</p>
+<div id="ext" class="panel"></div>
+</section>
+
+<section>
+<h2>Generic ballot</h2>
+<p class="sub" style="margin-bottom:10px" id="gsum"></p>
+<div class="tw"><table id="gtab"></table></div>
+</section>
+
+<section>
+<h2>Carreras</h2>
+<div class="tabs" style="margin:8px 0"><button id="tS" class="on">Senado (35)</button><button id="tG">Gobernaciones (36)</button></div>
+<p class="note" style="margin-bottom:8px">Margen = candidato de la izquierda de la columna “Carrera” menos el de la derecha (positivo = ventaja del primero). ± = margen de error al 95% (incluye error histórico de casa). “Ajustado” resta el sesgo del escenario. Clic en una fila para ver las encuestas.</p>
+<div class="tw"><table id="rtab"></table></div>
+</section>
+
+<section>
+<h2>Sesgo histórico: encuestas vs. resultado oficial</h2>
+<p class="sub" style="margin-bottom:10px">Error medio firmado por ciclo (margen D−R de la encuesta menos el resultado). Positivo = las encuestas sobrestimaron a los demócratas (subestimaron a los republicanos); rojo = subestimó a R, azul = subestimó a D. Fuente 538 (1998–2022) y Silver Bulletin para 2024 (aproximado).</p>
+<div class="grid" id="hist"></div>
+<div class="tw" style="margin-top:14px"><table id="htab"></table></div>
+</section>
+
+<section>
+<h2>Casas encuestadoras</h2>
+<p class="note" style="margin-bottom:8px">Efecto de casa (D−R, pts, histórico 538 con contracción) y nota de calidad (0–3) de las casas con encuestas cargadas.</p>
+<div class="tw"><table id="ptab"></table></div>
+</section>
+
+<section class="panel">
+<h2>Recuento en vivo (noche electoral)</h2>
+<p class="note" style="margin:4px 0 10px">Pega resultados parciales en JSON o CSV. Cada carrera combina el recuento con el margen previo: a más porcentaje contado, más pesa el recuento. Una carrera con “called” (proyectada por AP) fija el resultado. La página es estática: no se actualiza sola; el script <span class="mono">ap_results.py</span> (sin probar) desde la API de AP); si lo abres como archivo suelto, pega a mano.</p>
+<textarea id="lv" spellcheck="false" placeholder='id,counted_pct,D,R,I,called
+S-TX,62,2310000,2400000,0,
+S-IA,100,610000,690000,0,R'></textarea>
+<p class="note">Formato: id (S-XX o G-XX), % contado, votos del candidato de la izquierda de la tabla (col. D), de la derecha (col. R), otros, y called (D/R/I). JSON: {"races":[{"id":"S-TX","counted":62,"D":2310000,"R":2400000,"called":""}]}</p>
+<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button id="lgo">Aplicar</button><button id="lex">Cargar ejemplo SIMULADO</button><button id="lclr">Borrar</button><span id="lmsg" class="note" style="align-self:center"></span></div>
+</section>
+
+<section>
+<h2>Metodología y fuentes</h2>
+<div class="panel" style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--fg2)">
+<p><b>Unificación.</b> Margen de cada encuesta menos el efecto de casa histórico (contraído) y el de patrocinador (D +4,1 / R −3,9). Peso = recencia (semivida 10 días generic, 12 días carreras) × tamaño muestral × calidad 538 × población (LV 1, RV 0,7, adultos 0,5), con menor peso para repeticiones de una misma casa. Si faltan muestras se asumen 800.</p>
+<p><b>Carreras.</b> Media de encuestas (o promedio de agregador cuando hay pocas cargadas) combinada con una evaluación a priori débil de la calificación Cook (Senado). Error de la carrera = error histórico no explicado por el muestreo (σ ≈ 5 pts) + incertidumbre de la media; se simula con un choque nacional común (σ ajustable) más un error propio.</p>
+<p><b>Sesgo histórico.</b> Se resta al margen según el escenario elegido. Por defecto el promedio de midterms 2002–2022 (Senado +0,1; gobernaciones +1,2; generic +2,4 hacia D). Los de 2016/2020/2024 son mucho mayores: pruébalos.</p>
+<p><b>Cámara.</b> Bancas = 239 + 5,5 × (generic ajustado − 8,5 + choque) ± 8. Es un atajo, no un modelo por distrito.</p>
+<p><b>Cómo leerlo.</b> Los escenarios no son pronósticos separados: muestran cuánto cambia el resultado si las encuestas fallan como en cada época.</p>
+<ul class="src" id="srcs">
+<li>Encuestas: <a href="https://pollcheck.com">PollCheck</a> (corte 1/11/2026), <a href="https://www.realclearpolling.com">RealClearPolling</a>, Silver Bulletin, Pollstergraph, On Point Politics.</li>
+<li>Historial de errores y casas: <a href="https://github.com/fivethirtyeight/data/tree/master/pollster-ratings">538, pollster-ratings</a>; 2024 de Silver Bulletin.</li>
+<li>Calificaciones: Cook Political Report (vía <a href="https://en.wikipedia.org/wiki/2026_United_States_Senate_elections">Wikipedia</a>, 23/9).</li>
+<li>Recuento: <a href="https://developer.ap.org/ap-elections-api/">AP Elections API</a>; certificación legal por cada estado.</li>
+</ul>
+</div>
+</section>
+</div>
+<script>
+const DATA={"asof":"2026-11-01","election":"2026-11-03","generic":[{"p":"Big Data Poll (R)","d":"2026-10-30","n":3214,"pop":"LV","L":52.3,"R":40,"sp":""},{"p":"NBC News (Hart/POS)","d":"2026-10-30","n":1000,"pop":"RV","L":52,"R":45,"sp":""},{"p":"Ipsos","d":"2026-10-28","n":1209,"pop":"LV","L":50,"R":44,"sp":""},{"p":"Tufts / YouGov","d":"2026-10-27","n":499,"pop":"LV","L":52,"R":40,"sp":""},{"p":"Emerson College","d":"2026-10-26","n":1000,"pop":"LV","L":52,"R":42,"sp":""},{"p":"Harvard / Harris","d":"2026-10-26","n":null,"pop":"LV","L":52,"R":48,"sp":""},{"p":"The Economist / YouGov","d":"2026-10-26","n":1123,"pop":"LV","L":52,"R":41,"sp":""},{"p":"Reuters / Ipsos","d":"2026-10-26","n":1164,"pop":"LV","L":53,"R":44,"sp":""},{"p":"NPR / PBS / Marist","d":"2026-10-26","n":null,"pop":"LV","L":52,"R":44,"sp":""},{"p":"Leger","d":"2026-10-25","n":1037,"pop":"A","L":42,"R":36,"sp":""},{"p":"Cygnal","d":"2026-10-24","n":1500,"pop":"LV","L":52,"R":43,"sp":""},{"p":"CBS / YouGov","d":"2026-10-23","n":1749,"pop":"LV","L":53,"R":45,"sp":""},{"p":"Echelon Insights","d":"2026-10-23","n":3644,"pop":"LV","L":51,"R":46,"sp":""},{"p":"The Argument / Verasight","d":"2026-10-23","n":null,"pop":"LV","L":52,"R":41,"sp":""},{"p":"Prolific","d":"2026-10-22","n":1518,"pop":"A","L":52.6,"R":41.9,"sp":""},{"p":"Targoz Market Research","d":"2026-10-22","n":1118,"pop":"LV","L":49,"R":46,"sp":""},{"p":"Clarity Campaign Labs","d":"2026-10-21","n":1016,"pop":"LV","L":52,"R":44,"sp":""},{"p":"ActiVote","d":"2026-10-21","n":1000,"pop":"LV","L":53,"R":47,"sp":""},{"p":"Rasmussen Reports","d":"2026-10-21","n":1755,"pop":"LV","L":48,"R":43,"sp":""},{"p":"The Economist / YouGov","d":"2026-10-20","n":1179,"pop":"LV","L":52,"R":43,"sp":""},{"p":"Focaldata / Financial Times","d":"2026-10-20","n":1594,"pop":"LV","L":53,"R":44,"sp":""},{"p":"Penn State / YouGov","d":"2026-10-20","n":724,"pop":"LV","L":47,"R":43,"sp":""},{"p":"The Rainey Center","d":"2026-10-20","n":1279,"pop":"RV","L":52,"R":44,"sp":""},{"p":"Morning Consult","d":"2026-10-20","n":2050,"pop":"RV","L":48,"R":42,"sp":""},{"p":"Reuters / Ipsos","d":"2026-10-19","n":1279,"pop":"RV","L":47,"R":35,"sp":""},{"p":"CNBC","d":"2026-10-19","n":1000,"pop":"RV","L":52,"R":45,"sp":""},{"p":"New York Times / Siena","d":"2026-10-19","n":3494,"pop":"LV","L":52,"R":41,"sp":""},{"p":"CNN / SSRS","d":"2026-10-18","n":1206,"pop":"RV","L":49,"R":39,"sp":""},{"p":"Hart / Public Opinion Strategies","d":"2026-10-18","n":1000,"pop":"RV","L":52,"R":45,"sp":""}],"genericExt":[{"src":"RealClearPolling","asof":"8-29/10","D":51.5,"R":43.1},{"src":"PollCheck","asof":"1/11","D":50.7,"R":42.6},{"src":"Silver Bulletin","asof":"fines de oct.","D":51.2,"R":42.5},{"src":"Pollstergraph","asof":"fines de oct.","D":51.04,"R":43.07},{"src":"On Point Politics","asof":"29/10","D":52.9,"R":42.1}],"senate":[{"id":"S-AL","kind":"S","st":"AL","name":"Alabama","L":{"n":"Wess","p":"D"},"R":{"n":"Moore","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-AK","kind":"S","st":"AK","name":"Alaska","L":{"n":"Peltola","p":"D"},"R":{"n":"Sullivan","p":"R"},"cur":"R","cook":"Toss-up","ext":{"L":51.1,"R":48.5,"np":6,"src":"PollCheck 1/11"},"polls":[{"p":"Alaska Survey Research","d":"2026-10-29","n":1326,"pop":"LV","L":51,"R":49,"sp":""},{"p":"Data for Progress","d":"2026-10-16","n":671,"pop":"LV","L":51,"R":49,"sp":""},{"p":"InsiderAdvantage","d":"2026-10-10","n":1200,"pop":"LV","L":50,"R":48,"sp":""},{"p":"Alaska Survey Research","d":"2026-10-03","n":1512,"pop":"LV","L":51,"R":49,"sp":""}]},{"id":"S-AR","kind":"S","st":"AR","name":"Arkansas","L":{"n":"Shoffner","p":"D"},"R":{"n":"Cotton","p":"R"},"cur":"R","cook":"Solid R","ext":{"L":40.1,"R":49.5,"np":5,"src":"PollCheck 1/11"},"polls":[]},{"id":"S-CO","kind":"S","st":"CO","name":"Colorado","L":{"n":"Hickenlooper","p":"D"},"R":{"n":"Baisley","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-DE","kind":"S","st":"DE","name":"Delaware","L":{"n":"Coons","p":"D"},"R":{"n":"Katz","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-FL","kind":"S","st":"FL","name":"Florida (especial)","L":{"n":"Nixon","p":"D"},"R":{"n":"Moody","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-GA","kind":"S","st":"GA","name":"Georgia","L":{"n":"Ossoff","p":"D"},"R":{"n":"Collins","p":"R"},"cur":"D","cook":"Likely D","ext":{"L":51.6,"R":42.1,"np":29,"src":"PollCheck 1/11"},"polls":[]},{"id":"S-ID","kind":"S","st":"ID","name":"Idaho","L":{"n":"Achilles","p":"I"},"R":{"n":"Risch","p":"R"},"cur":"R","cook":"Solid R","ext":{"L":42.0,"R":46.1,"np":6,"src":"PollCheck 1/11"},"polls":[]},{"id":"S-IL","kind":"S","st":"IL","name":"Illinois","L":{"n":"Stratton","p":"D"},"R":{"n":"Tracy","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-IA","kind":"S","st":"IA","name":"Iowa","L":{"n":"Turek","p":"D"},"R":{"n":"Hinson","p":"R"},"cur":"R","cook":"Toss-up","ext":{"L":46.3,"R":45.9,"np":29,"src":"PollCheck 1/11"},"polls":[{"p":"YouGov","d":"2026-10-29","n":2020,"pop":"LV","L":50,"R":49,"sp":""},{"p":"co/efficient","d":"2026-10-28","n":1020,"pop":"LV","L":46,"R":48,"sp":""},{"p":"Echelon Insights","d":"2026-10-23","n":403,"pop":"LV","L":45,"R":43,"sp":""},{"p":"InsiderAdvantage","d":"2026-10-22","n":1200,"pop":"LV","L":45,"R":47,"sp":""},{"p":"co/efficient","d":"2026-10-19","n":863,"pop":"LV","L":45,"R":48,"sp":""},{"p":"Trafalgar Group","d":"2026-10-15","n":1094,"pop":"LV","L":44,"R":46,"sp":""},{"p":"GS Strategy / New River (Cook)","d":"2026-10-13","n":602,"pop":"LV","L":46,"R":44,"sp":""},{"p":"NPA Polling","d":"2026-10-12","n":678,"pop":"LV","L":44,"R":47,"sp":""},{"p":"YouGov","d":"2026-10-12","n":2245,"pop":"LV","L":47,"R":46,"sp":""},{"p":"Marist","d":"2026-10-11","n":null,"pop":"LV","L":48,"R":45,"sp":""},{"p":"Emerson College","d":"2026-10-06","n":650,"pop":"LV","L":45,"R":47,"sp":""},{"p":"SSRS (CNN)","d":"2026-10-05","n":801,"pop":"LV","L":43,"R":45,"sp":""},{"p":"Suffolk","d":"2026-10-04","n":500,"pop":"LV","L":48,"R":44,"sp":""},{"p":"NYT / Siena","d":"2026-10-01","n":606,"pop":"LV","L":47,"R":48,"sp":""}]},{"id":"S-KS","kind":"S","st":"KS","name":"Kansas","L":{"n":"Hamilton","p":"D"},"R":{"n":"Marshall","p":"R"},"cur":"R","cook":"Lean R","ext":{"L":48.1,"R":45.9,"np":16,"src":"PollCheck 1/11"},"polls":[{"p":"YouGov","d":"2026-10-29","n":null,"pop":"LV","L":50,"R":49,"sp":""},{"p":"Emerson College","d":"2026-10-28","n":null,"pop":"LV","L":50,"R":47,"sp":""},{"p":"Washington Post / SSPG","d":"2026-10-26","n":null,"pop":"LV","L":52,"R":43,"sp":""},{"p":"SSRS (CNN)","d":"2026-10-26","n":null,"pop":"LV","L":49,"R":45,"sp":""},{"p":"RedBox Research","d":"2026-10-23","n":null,"pop":"LV","L":45,"R":46,"sp":""},{"p":"InsiderAdvantage","d":"2026-10-14","n":null,"pop":"LV","L":47,"R":48,"sp":""}]},{"id":"S-KY","kind":"S","st":"KY","name":"Kentucky","L":{"n":"Booker","p":"D"},"R":{"n":"Barr","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-LA","kind":"S","st":"LA","name":"Luisiana","L":{"n":"Davis","p":"D"},"R":{"n":"Letlow","p":"R"},"cur":"R","cook":"Solid R","ext":{"L":45.1,"R":44.6,"np":3,"src":"PollCheck 1/11"},"polls":[{"p":"Hart Research (campaña de Davis)","d":"2026-10-29","n":502,"pop":"LV","L":45,"R":45,"sp":"D"}]},{"id":"S-ME","kind":"S","st":"ME","name":"Maine","L":{"n":"Jackson","p":"D"},"R":{"n":"Collins","p":"R"},"cur":"R","cook":"Toss-up","ext":{"L":49.1,"R":46.9,"np":31,"src":"PollCheck 1/11"},"polls":[{"p":"YouGov","d":"2026-10-29","n":null,"pop":"LV","L":52,"R":47,"sp":""},{"p":"Data for Progress","d":"2026-10-27","n":null,"pop":"LV","L":50,"R":45,"sp":""},{"p":"CNN / SSRS","d":"2026-10-26","n":null,"pop":"LV","L":49,"R":45,"sp":""},{"p":"Marist","d":"2026-10-25","n":null,"pop":"LV","L":49,"R":47,"sp":""},{"p":"Trafalgar Group","d":"2026-10-23","n":null,"pop":"LV","L":47,"R":47,"sp":""},{"p":"Fox News (Beacon / Shaw)","d":"2026-10-20","n":null,"pop":"LV","L":49,"R":49,"sp":""}]},{"id":"S-MA","kind":"S","st":"MA","name":"Massachusetts","L":{"n":"Markey","p":"D"},"R":{"n":"Deaton","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-MI","kind":"S","st":"MI","name":"Míchigan","L":{"n":"El-Sayed","p":"D"},"R":{"n":"Rogers","p":"R"},"cur":"D","cook":"Toss-up","ext":{"L":48.8,"R":44.7,"np":44,"src":"PollCheck 1/11"},"polls":[{"p":"YouGov","d":"2026-11-01","n":2093,"pop":"LV","L":51,"R":47,"sp":""},{"p":"Data for Progress","d":"2026-10-30","n":622,"pop":"LV","L":50,"R":46,"sp":""},{"p":"Michigan State Univ.","d":"2026-10-29","n":1383,"pop":"LV","L":51,"R":43,"sp":""},{"p":"CNN / SSRS","d":"2026-10-29","n":768,"pop":"LV","L":49,"R":42,"sp":""},{"p":"Mitchell Research","d":"2026-10-28","n":636,"pop":"LV","L":51,"R":44,"sp":""},{"p":"Glengariff Group","d":"2026-10-27","n":600,"pop":"LV","L":51,"R":45,"sp":""},{"p":"Michigan State Univ.","d":"2026-10-26","n":836,"pop":"LV","L":48,"R":46,"sp":""},{"p":"InsiderAdvantage","d":"2026-10-23","n":1200,"pop":"LV","L":47,"R":46,"sp":""},{"p":"Marist","d":"2026-10-21","n":1185,"pop":"LV","L":50,"R":48,"sp":""},{"p":"InsiderAdvantage","d":"2026-10-11","n":1200,"pop":"LV","L":48,"R":46,"sp":""},{"p":"Z to A Research","d":"2026-10-09","n":483,"pop":"LV","L":49,"R":42,"sp":""},{"p":"Quantus Insights","d":"2026-10-07","n":744,"pop":"LV","L":48,"R":47,"sp":""},{"p":"Guidant Polling","d":"2026-10-07","n":800,"pop":"LV","L":48,"R":43,"sp":""},{"p":"YouGov","d":"2026-10-06","n":3947,"pop":"LV","L":49,"R":48,"sp":""},{"p":"Mitchell Research","d":"2026-10-05","n":682,"pop":"LV","L":46,"R":41,"sp":""},{"p":"Trafalgar Group","d":"2026-10-01","n":1085,"pop":"LV","L":47,"R":45,"sp":""}]},{"id":"S-MN","kind":"S","st":"MN","name":"Minnesota","L":{"n":"Flanagan","p":"D"},"R":{"n":"Tafoya","p":"R"},"cur":"D","cook":"Likely D","ext":{"L":48.3,"R":42.1,"np":18,"src":"PollCheck 1/11"},"polls":[{"p":"NYT / Siena","d":"2026-10-26","n":null,"pop":"LV","L":54,"R":40,"sp":""},{"p":"KSTP / SurveyUSA","d":"2026-10-28","n":null,"pop":"LV","L":48,"R":41,"sp":""},{"p":"Rasmussen Reports","d":"2026-10-21","n":null,"pop":"LV","L":48,"R":45,"sp":""},{"p":"Trafalgar Group","d":"2026-10-15","n":null,"pop":"LV","L":48,"R":45,"sp":""}]},{"id":"S-MS","kind":"S","st":"MS","name":"Misisipi","L":{"n":"Colom","p":"D"},"R":{"n":"Hyde-Smith","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-MT","kind":"S","st":"MT","name":"Montana","L":{"n":"Bankhead","p":"D"},"R":{"n":"Alme","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-NE","kind":"S","st":"NE","name":"Nebraska","L":{"n":"Osborn","p":"I"},"R":{"n":"Ricketts","p":"R"},"cur":"R","cook":"Likely R","ext":{"L":45.7,"R":47.2,"np":14,"src":"PollCheck 1/11"},"polls":[{"p":"YouGov","d":"2026-10-29","n":1979,"pop":"LV","L":49,"R":49,"sp":""},{"p":"NYT / Siena","d":"2026-10-29","n":809,"pop":"LV","L":43,"R":49,"sp":""},{"p":"National Public Affairs","d":"2026-10-29","n":800,"pop":"LV","L":45,"R":48,"sp":""},{"p":"Echelon Insights","d":"2026-10-23","n":407,"pop":"LV","L":46,"R":47,"sp":""},{"p":"GBAO (PAC pro-Osborn)","d":"2026-10-22","n":800,"pop":"LV","L":46,"R":45,"sp":"D"},{"p":"Impact Research (campaña de Osborn)","d":"2026-10-20","n":600,"pop":"LV","L":47,"R":49,"sp":"D"},{"p":"Concord Public Opinion Partners","d":"2026-10-18","n":500,"pop":"LV","L":48,"R":41,"sp":""},{"p":"National Public Affairs","d":"2026-10-18","n":598,"pop":"LV","L":43,"R":46,"sp":""},{"p":"National Public Affairs","d":"2026-10-05","n":800,"pop":"LV","L":43,"R":46,"sp":""},{"p":"YouGov","d":"2026-10-03","n":1809,"pop":"LV","L":48,"R":47,"sp":""}]},{"id":"S-NH","kind":"S","st":"NH","name":"Nuevo Hampshire","L":{"n":"Pappas","p":"D"},"R":{"n":"Sununu","p":"R"},"cur":"D","cook":"Toss-up","ext":{"L":49.5,"R":42.6,"np":13,"src":"PollCheck 1/11"},"polls":[{"p":"Rasmussen Reports","d":"2026-10-23","n":970,"pop":"LV","L":50,"R":44,"sp":""},{"p":"Saint Anselm College","d":"2026-10-20","n":1672,"pop":"LV","L":50,"R":43,"sp":""},{"p":"UMass Lowell / YouGov","d":"2026-10-19","n":600,"pop":"LV","L":48,"R":41,"sp":""},{"p":"National Public Affairs","d":"2026-10-12","n":600,"pop":"LV","L":50,"R":45,"sp":""},{"p":"YouGov","d":"2026-10-05","n":1520,"pop":"LV","L":51,"R":43,"sp":""},{"p":"Rasmussen Reports","d":"2026-10-04","n":979,"pop":"LV","L":49,"R":44,"sp":""}]},{"id":"S-NJ","kind":"S","st":"NJ","name":"Nueva Jersey","L":{"n":"Booker","p":"D"},"R":{"n":"Murphy","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-NM","kind":"S","st":"NM","name":"Nuevo México","L":{"n":"Luján","p":"D"},"R":{"n":"Marker","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-NC","kind":"S","st":"NC","name":"Carolina del Norte","L":{"n":"Cooper","p":"D"},"R":{"n":"Whatley","p":"R"},"cur":"R","cook":"Lean D","ext":{"L":51.5,"R":40.6,"np":40,"src":"PollCheck 1/11"},"polls":[{"p":"Quantus Insights","d":"2026-10-25","n":722,"pop":"LV","L":51,"R":43,"sp":""},{"p":"Harper Polling (Carolina Journal)","d":"2026-10-20","n":600,"pop":"LV","L":49,"R":39,"sp":""},{"p":"ActiVote","d":"2026-10-20","n":400,"pop":"LV","L":57,"R":43,"sp":""},{"p":"High Point Univ. / YouGov","d":"2026-10-20","n":620,"pop":"LV","L":54,"R":40,"sp":""},{"p":"SurveyUSA","d":"2026-10-11","n":643,"pop":"LV","L":54,"R":40,"sp":""},{"p":"Trafalgar Group","d":"2026-10-10","n":1091,"pop":"LV","L":49,"R":41,"sp":""},{"p":"Elon Univ. / YouGov","d":"2026-10-08","n":561,"pop":"LV","L":52,"R":39,"sp":""},{"p":"Change Research (Carolina Forward)","d":"2026-10-07","n":829,"pop":"LV","L":50,"R":40,"sp":"D"},{"p":"East Carolina Univ.","d":"2026-10-03","n":810,"pop":"LV","L":50,"R":43,"sp":""}]},{"id":"S-OH","kind":"S","st":"OH","name":"Ohio (especial)","L":{"n":"Brown","p":"D"},"R":{"n":"Husted","p":"R"},"cur":"R","cook":"Toss-up","ext":{"L":48.2,"R":45.0,"np":53,"src":"PollCheck 1/11"},"polls":[{"p":"ActiVote","d":"2026-10-31","n":400,"pop":"LV","L":50.2,"R":49.8,"sp":""},{"p":"Suffolk","d":"2026-10-26","n":500,"pop":"LV","L":47,"R":44,"sp":""},{"p":"RedBox Research (super PAC demócrata)","d":"2026-10-23","n":2998,"pop":"LV","L":47,"R":44,"sp":"D"},{"p":"Echelon Insights","d":"2026-10-23","n":508,"pop":"LV","L":47,"R":47,"sp":""},{"p":"Rasmussen Reports","d":"2026-10-14","n":901,"pop":"LV","L":47,"R":49,"sp":""}]},{"id":"S-OK","kind":"S","st":"OK","name":"Oklahoma","L":{"n":"Thomas","p":"D"},"R":{"n":"Hern","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-OR","kind":"S","st":"OR","name":"Oregón","L":{"n":"Merkley","p":"D"},"R":{"n":"Smith","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-RI","kind":"S","st":"RI","name":"Rhode Island","L":{"n":"Reed","p":"D"},"R":{"n":"McKay","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-SC","kind":"S","st":"SC","name":"Carolina del Sur","L":{"n":"Andrews","p":"D"},"R":{"n":"Graham","p":"R"},"cur":"R","cook":"Likely R","ext":{"L":45.2,"R":46.7,"np":15,"src":"PollCheck 1/11"},"polls":[{"p":"East Carolina Univ.","d":"2026-10-29","n":955,"pop":"LV","L":47,"R":51,"sp":""},{"p":"Siena College","d":"2026-10-28","n":707,"pop":"LV","L":48,"R":48,"sp":""},{"p":"The Citadel","d":"2026-10-27","n":890,"pop":"LV","L":39,"R":43,"sp":""},{"p":"Targoz Market Research","d":"2026-10-27","n":895,"pop":"LV","L":46,"R":47,"sp":""},{"p":"Trafalgar Group","d":"2026-10-18","n":1095,"pop":"LV","L":46,"R":49,"sp":""},{"p":"InsiderAdvantage","d":"2026-10-02","n":1200,"pop":"LV","L":45,"R":46,"sp":""}]},{"id":"S-SD","kind":"S","st":"SD","name":"Dakota del Sur","L":{"n":"Bengs","p":"I"},"R":{"n":"Rounds","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-TN","kind":"S","st":"TN","name":"Tennessee","L":{"n":"Bradshaw","p":"D"},"R":{"n":"Hagerty","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-TX","kind":"S","st":"TX","name":"Texas","L":{"n":"Talarico","p":"D"},"R":{"n":"Paxton","p":"R"},"cur":"R","cook":"Toss-up","ext":{"L":48.5,"R":45.7,"np":57,"src":"PollCheck 1/11"},"polls":[{"p":"Kreate Strategies","d":"2026-10-30","n":900,"pop":"LV","L":48,"R":45,"sp":""},{"p":"YouGov","d":"2026-10-29","n":2141,"pop":"LV","L":51,"R":47,"sp":""},{"p":"Quantus Insights","d":"2026-10-28","n":1221,"pop":"LV","L":48,"R":49,"sp":""},{"p":"ActiVote","d":"2026-10-28","n":400,"pop":"LV","L":52,"R":48,"sp":""},{"p":"A2 Insights","d":"2026-10-27","n":631,"pop":"LV","L":50,"R":47,"sp":""},{"p":"SSRS (CNN)","d":"2026-10-27","n":923,"pop":"LV","L":49,"R":43,"sp":""},{"p":"Data for Progress","d":"2026-10-26","n":712,"pop":"LV","L":49,"R":45,"sp":""},{"p":"YouGov Blue (254 Labs)","d":"2026-10-26","n":1000,"pop":"RV","L":51,"R":43,"sp":""},{"p":"Texas Southern Univ.","d":"2026-10-25","n":2000,"pop":"LV","L":49,"R":47,"sp":""},{"p":"Rasmussen Reports","d":"2026-10-21","n":965,"pop":"LV","L":45,"R":45,"sp":""},{"p":"ActiVote","d":"2026-10-21","n":400,"pop":"LV","L":51,"R":49,"sp":""},{"p":"Univision / YouGov","d":"2026-10-21","n":1000,"pop":"RV","L":50,"R":45,"sp":""},{"p":"Verasight / VoteHub","d":"2026-10-20","n":509,"pop":"LV","L":48,"R":45,"sp":""},{"p":"Emerson College","d":"2026-10-19","n":1000,"pop":"LV","L":49,"R":48,"sp":""},{"p":"Fox News (Beacon / Shaw)","d":"2026-10-19","n":1398,"pop":"LV","L":49,"R":49,"sp":""},{"p":"Texas Public Opinion Research","d":"2026-10-18","n":969,"pop":"LV","L":51,"R":47,"sp":""},{"p":"Pollfinity Research","d":"2026-10-18","n":278,"pop":"RV","L":48,"R":43,"sp":""},{"p":"CBS News / YouGov","d":"2026-10-16","n":1492,"pop":"LV","L":51,"R":49,"sp":""},{"p":"Cor Strategies (Heritage Action)","d":"2026-10-15","n":1409,"pop":"LV","L":44,"R":40,"sp":"R"},{"p":"InsiderAdvantage","d":"2026-10-14","n":1200,"pop":"LV","L":48,"R":49,"sp":""},{"p":"Univ. of Houston","d":"2026-10-14","n":2000,"pop":"LV","L":48,"R":46,"sp":""},{"p":"ActiVote","d":"2026-10-14","n":400,"pop":"LV","L":52,"R":48,"sp":""},{"p":"GS Strategy / New River (Cook)","d":"2026-10-13","n":934,"pop":"LV","L":49,"R":44,"sp":""},{"p":"Quantus Insights","d":"2026-10-11","n":854,"pop":"LV","L":47,"R":47,"sp":""},{"p":"Marist","d":"2026-10-11","n":null,"pop":"LV","L":47,"R":45,"sp":""},{"p":"Trafalgar Group","d":"2026-10-08","n":1086,"pop":"LV","L":47,"R":44,"sp":""},{"p":"ReconMR / Siena","d":"2026-10-08","n":617,"pop":"LV","L":48,"R":44,"sp":""},{"p":"YouGov","d":"2026-10-05","n":3625,"pop":"LV","L":50,"R":44,"sp":""},{"p":"UT / Texas Politics Project","d":"2026-10-05","n":861,"pop":"LV","L":50,"R":47,"sp":""}]},{"id":"S-VA","kind":"S","st":"VA","name":"Virginia","L":{"n":"Warner","p":"D"},"R":{"n":"Mizusawa","p":"R"},"cur":"D","cook":"Solid D","ext":null,"polls":[]},{"id":"S-WV","kind":"S","st":"WV","name":"Virginia Occidental","L":{"n":"Anderson","p":"D"},"R":{"n":"Capito","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]},{"id":"S-WY","kind":"S","st":"WY","name":"Wyoming","L":{"n":"Byrd","p":"D"},"R":{"n":"Hageman","p":"R"},"cur":"R","cook":"Solid R","ext":null,"polls":[]}],"gov":[{"id":"G-OR","kind":"G","st":"OR","name":"Oregón","L":{"n":"Kotek","p":"D"},"R":{"n":"Drazan","p":"R"},"cur":"D","cook":"","polls":[{"p":"GBAO (campaña de Kotek)","d":"2026-10-04","n":800,"pop":"LV","L":46,"R":42,"sp":"D"},{"p":"DHM Research","d":"2026-10-01","n":549,"pop":"LV","L":46,"R":44,"sp":""}],"ext":{"L":45.7,"R":44.5,"np":3,"src":"PollCheck 1/11"}},{"id":"G-NV","kind":"G","st":"NV","name":"Nevada","L":{"n":"Ford","p":"D"},"R":{"n":"Lombardo","p":"R"},"cur":"R","cook":"","polls":[{"p":"Noble Predictive Insights","d":"2026-10-28","n":487,"pop":"LV","L":47,"R":47,"sp":""},{"p":"Hart Research (grupo pro-DGA)","d":"2026-10-25","n":950,"pop":"LV","L":49,"R":45,"sp":"D"},{"p":"RedBox Research","d":"2026-10-23","n":1407,"pop":"LV","L":46,"R":43,"sp":""},{"p":"Global Strategy Group (campaña de Ford)","d":"2026-10-13","n":700,"pop":"LV","L":47,"R":48,"sp":"D"}],"ext":{"L":46.1,"R":44.6,"np":9,"src":"PollCheck 1/11"}},{"id":"G-GA","kind":"G","st":"GA","name":"Georgia","L":{"n":"Bottoms","p":"D"},"R":{"n":"Jackson","p":"R"},"cur":"R","cook":"","polls":[{"p":"State Navigate","d":"2026-10-27","n":679,"pop":"LV","L":50,"R":47,"sp":""},{"p":"Echelon Insights","d":"2026-10-23","n":508,"pop":"LV","L":49,"R":48,"sp":""},{"p":"ActiVote","d":"2026-10-20","n":400,"pop":"LV","L":48.5,"R":51.5,"sp":""},{"p":"Quantus Insights","d":"2026-10-17","n":755,"pop":"LV","L":47,"R":48,"sp":""},{"p":"Univ. of Georgia / AJC","d":"2026-10-15","n":1000,"pop":"LV","L":45,"R":46,"sp":""},{"p":"InsiderAdvantage","d":"2026-10-13","n":800,"pop":"LV","L":47,"R":49,"sp":""}],"ext":{"L":47.1,"R":47.7,"np":14,"src":"PollCheck 1/11"}},{"id":"G-OH","kind":"G","st":"OH","name":"Ohio","L":{"n":"Acton","p":"D"},"R":{"n":"Ramaswamy","p":"R"},"cur":"R","cook":"","polls":[{"p":"ActiVote","d":"2026-10-31","n":400,"pop":"LV","L":51,"R":49,"sp":""},{"p":"YouGov","d":"2026-10-29","n":2090,"pop":"LV","L":52,"R":46,"sp":""},{"p":"Suffolk","d":"2026-10-26","n":500,"pop":"LV","L":48,"R":44,"sp":""},{"p":"RedBox Research (super PAC demócrata)","d":"2026-10-23","n":2998,"pop":"LV","L":48,"R":44,"sp":"D"},{"p":"Echelon Insights","d":"2026-10-23","n":508,"pop":"LV","L":45,"R":47,"sp":""},{"p":"Verasight / VoteHub","d":"2026-10-20","n":531,"pop":"LV","L":46,"R":45,"sp":""},{"p":"Fox News (Beacon / Shaw)","d":"2026-10-19","n":1592,"pop":"LV","L":50,"R":48,"sp":""},{"p":"ActiVote","d":"2026-10-19","n":400,"pop":"LV","L":49,"R":51,"sp":""},{"p":"Marist","d":"2026-10-18","n":null,"pop":"LV","L":51,"R":43,"sp":""},{"p":"GS Strategy / New River (Cook)","d":"2026-10-13","n":959,"pop":"LV","L":49,"R":44,"sp":""},{"p":"Bowling Green State / YouGov","d":"2026-10-09","n":1000,"pop":"LV","L":50,"R":44,"sp":""},{"p":"co/efficient","d":"2026-10-06","n":925,"pop":"LV","L":43,"R":45,"sp":""},{"p":"SSRS (CNN)","d":"2026-10-05","n":760,"pop":"LV","L":50,"R":42,"sp":""},{"p":"NYT / Siena","d":"2026-10-01","n":616,"pop":"LV","L":49,"R":45,"sp":""}],"ext":{"L":48.2,"R":45.2,"np":21,"src":"PollCheck 1/11"}},{"id":"G-WI","kind":"G","st":"WI","name":"Wisconsin","L":{"n":"Crowley","p":"D"},"R":{"n":"Tiffany","p":"R"},"cur":"D","cook":"","polls":[{"p":"Wick (League of American Workers)","d":"2026-10-23","n":1213,"pop":"LV","L":48,"R":45,"sp":"R"},{"p":"Marquette Univ.","d":"2026-10-22","n":668,"pop":"LV","L":51,"R":44,"sp":""},{"p":"YouGov (City Forward Collective)","d":"2026-10-09","n":1715,"pop":"A","L":46,"R":42,"sp":"D"},{"p":"Z to A Research (Rust Belt Rising)","d":"2026-10-01","n":662,"pop":"LV","L":49,"R":44,"sp":"D"}],"ext":{"L":48.1,"R":44.0,"np":8,"src":"PollCheck 1/11"}},{"id":"G-TX","kind":"G","st":"TX","name":"Texas","L":{"n":"Hinojosa","p":"D"},"R":{"n":"Abbott","p":"R"},"cur":"R","cook":"","polls":[{"p":"Kreate Strategies","d":"2026-10-30","n":900,"pop":"LV","L":47,"R":49,"sp":""},{"p":"ActiVote","d":"2026-10-29","n":400,"pop":"LV","L":47.9,"R":52.1,"sp":""},{"p":"Quantus Insights","d":"2026-10-28","n":1221,"pop":"LV","L":46,"R":51,"sp":""},{"p":"SSRS (CNN)","d":"2026-10-27","n":923,"pop":"LV","L":46,"R":48,"sp":""},{"p":"Data for Progress","d":"2026-10-26","n":712,"pop":"LV","L":47,"R":48,"sp":""},{"p":"YouGov Blue (254 Labs)","d":"2026-10-26","n":1000,"pop":"RV","L":49,"R":46,"sp":""},{"p":"Texas Southern Univ.","d":"2026-10-25","n":2000,"pop":"LV","L":47,"R":50,"sp":""},{"p":"ActiVote","d":"2026-10-21","n":400,"pop":"LV","L":48,"R":52,"sp":""},{"p":"Univision / YouGov","d":"2026-10-21","n":1000,"pop":"RV","L":46,"R":48,"sp":""},{"p":"Verasight / VoteHub","d":"2026-10-20","n":509,"pop":"LV","L":46,"R":48,"sp":""},{"p":"Emerson College","d":"2026-10-19","n":1000,"pop":"LV","L":45,"R":49,"sp":""},{"p":"Fox News (Beacon / Shaw)","d":"2026-10-19","n":1398,"pop":"LV","L":47,"R":52,"sp":""},{"p":"Texas Public Opinion Research","d":"2026-10-18","n":969,"pop":"LV","L":48,"R":51,"sp":""},{"p":"Pollfinity Research","d":"2026-10-18","n":278,"pop":"RV","L":45,"R":46,"sp":""},{"p":"CBS News / YouGov","d":"2026-10-16","n":1492,"pop":"LV","L":48,"R":52,"sp":""}],"ext":{"L":46.4,"R":48.9,"np":48,"src":"PollCheck 1/11"}},{"id":"G-KS","kind":"G","st":"KS","name":"Kansas","L":{"n":"Holscher","p":"D"},"R":{"n":"Masterson","p":"R"},"cur":"D","cook":"","polls":[{"p":"Emerson College","d":"2026-10-28","n":800,"pop":"LV","L":46,"R":50,"sp":""},{"p":"Washington Post / SSPG","d":"2026-10-26","n":801,"pop":"LV","L":51,"R":45,"sp":""},{"p":"SSRS (CNN)","d":"2026-10-26","n":838,"pop":"LV","L":45,"R":50,"sp":""},{"p":"Global Strategy Group (campaña de Holscher)","d":"2026-10-21","n":600,"pop":"LV","L":47,"R":47,"sp":"D"},{"p":"YouGov","d":"2026-10-04","n":2255,"pop":"LV","L":44,"R":47,"sp":""}],"ext":{"L":46.1,"R":48.9,"np":10,"src":"PollCheck 1/11"}},{"id":"G-VT","kind":"G","st":"VT","name":"Vermont","L":{"n":"Janoo","p":"D"},"R":{"n":"Scott","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":43.7,"R":46.5,"np":4,"src":"PollCheck 1/11"}},{"id":"G-FL","kind":"G","st":"FL","name":"Florida","L":{"n":"Jolly","p":"D"},"R":{"n":"Donalds","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":44.0,"R":48.0,"np":26,"src":"PollCheck 1/11"}},{"id":"G-AK","kind":"G","st":"AK","name":"Alaska","L":{"n":"Kreiss-Tomkins","p":"D"},"R":{"n":"Wilson","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":53.3,"R":46.7,"np":6,"src":"PollCheck 1/11"}},{"id":"G-NM","kind":"G","st":"NM","name":"Nuevo México","L":{"n":"Haaland","p":"D"},"R":{"n":"Hull","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":47.7,"R":40.9,"np":5,"src":"PollCheck 1/11"}},{"id":"G-MI","kind":"G","st":"MI","name":"Míchigan","L":{"n":"Benson","p":"D"},"R":{"n":"James","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":49.7,"R":42.7,"np":27,"src":"PollCheck 1/11"}},{"id":"G-AZ","kind":"G","st":"AZ","name":"Arizona","L":{"n":"Hobbs","p":"D"},"R":{"n":"Biggs","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":48.7,"R":41.6,"np":19,"src":"PollCheck 1/11"}},{"id":"G-IA","kind":"G","st":"IA","name":"Iowa","L":{"n":"Sand","p":"D"},"R":{"n":"Lahn","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":51.3,"R":43.7,"np":19,"src":"PollCheck 1/11"}},{"id":"G-NE","kind":"G","st":"NE","name":"Nebraska","L":{"n":"Walz","p":"D"},"R":{"n":"Pillen","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":40.4,"R":46.2,"np":12,"src":"PollCheck 1/11"}},{"id":"G-ME","kind":"G","st":"ME","name":"Maine","L":{"n":"Pingree","p":"D"},"R":{"n":"Charles","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":49.5,"R":39.2,"np":18,"src":"PollCheck 1/11"}},{"id":"G-OK","kind":"G","st":"OK","name":"Oklahoma","L":{"n":"Munson","p":"D"},"R":{"n":"Mazzei","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":null,"R":null,"np":0,"src":"estimación por tendencia (PollCheck)","margin":-9.3}},{"id":"G-NH","kind":"G","st":"NH","name":"Nuevo Hampshire","L":{"n":"Warmington","p":"D"},"R":{"n":"Ayotte","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":41.4,"R":50.1,"np":9,"src":"PollCheck 1/11"}},{"id":"G-TN","kind":"G","st":"TN","name":"Tennessee","L":{"n":"Green","p":"D"},"R":{"n":"Blackburn","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":31.9,"R":40.7,"np":4,"src":"PollCheck 1/11"}},{"id":"G-MN","kind":"G","st":"MN","name":"Minnesota","L":{"n":"Klobuchar","p":"D"},"R":{"n":"Demuth","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":51.6,"R":40.5,"np":11,"src":"PollCheck 1/11"}},{"id":"G-SC","kind":"G","st":"SC","name":"Carolina del Sur","L":{"n":"Johnson","p":"D"},"R":{"n":"Wilson","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":38.7,"R":48.3,"np":8,"src":"PollCheck 1/11"}},{"id":"G-AL","kind":"G","st":"AL","name":"Alabama","L":{"n":"Jones","p":"D"},"R":{"n":"Tuberville","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":40.3,"R":50.3,"np":5,"src":"PollCheck 1/11"}},{"id":"G-NY","kind":"G","st":"NY","name":"Nueva York","L":{"n":"Hochul","p":"D"},"R":{"n":"Blakeman","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":53.4,"R":40.8,"np":16,"src":"PollCheck 1/11"}},{"id":"G-RI","kind":"G","st":"RI","name":"Rhode Island","L":{"n":"Foulkes","p":"D"},"R":{"n":"Guckian","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":null,"R":null,"np":4,"src":"PollCheck 1/11 (margen publicado)","margin":12.7}},{"id":"G-CT","kind":"G","st":"CT","name":"Connecticut","L":{"n":"Lamont","p":"D"},"R":{"n":"Fazio","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":53.6,"R":36.4,"np":9,"src":"PollCheck 1/11"}},{"id":"G-SD","kind":"G","st":"SD","name":"Dakota del Sur","L":{"n":"Ahlers","p":"D"},"R":{"n":"Rhoden","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":36.9,"R":53.3,"np":3,"src":"PollCheck 1/11"}},{"id":"G-IL","kind":"G","st":"IL","name":"Illinois","L":{"n":"Pritzker","p":"D"},"R":{"n":"Bailey","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":58.1,"R":39.5,"np":3,"src":"PollCheck 1/11"}},{"id":"G-ID","kind":"G","st":"ID","name":"Idaho","L":{"n":"Pickens","p":"D"},"R":{"n":"Little","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":29.2,"R":46.3,"np":3,"src":"PollCheck 1/11"}},{"id":"G-AR","kind":"G","st":"AR","name":"Arkansas","L":{"n":"Love","p":"D"},"R":{"n":"Sanders","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":null,"R":null,"np":0,"src":"estimación por tendencia (PollCheck)","margin":-18.9}},{"id":"G-CO","kind":"G","st":"CO","name":"Colorado","L":{"n":"Weiser","p":"D"},"R":{"n":"Rep.","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":null,"R":null,"np":0,"src":"estimación por tendencia (PollCheck)","margin":19.7}},{"id":"G-CA","kind":"G","st":"CA","name":"California","L":{"n":"Becerra","p":"D"},"R":{"n":"Hilton","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":57.2,"R":35.6,"np":17,"src":"PollCheck 1/11"}},{"id":"G-PA","kind":"G","st":"PA","name":"Pensilvania","L":{"n":"Shapiro","p":"D"},"R":{"n":"Garrity","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":56.0,"R":34.3,"np":13,"src":"PollCheck 1/11"}},{"id":"G-MA","kind":"G","st":"MA","name":"Massachusetts","L":{"n":"Healey","p":"D"},"R":{"n":"Minogue","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":55.9,"R":32.4,"np":5,"src":"PollCheck 1/11"}},{"id":"G-MD","kind":"G","st":"MD","name":"Maryland","L":{"n":"Moore","p":"D"},"R":{"n":"Cox","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":null,"R":null,"np":0,"src":"estimación por tendencia (PollCheck)","margin":28.7}},{"id":"G-HI","kind":"G","st":"HI","name":"Hawái","L":{"n":"Green","p":"D"},"R":{"n":"Rep.","p":"R"},"cur":"D","cook":"","polls":[],"ext":{"L":null,"R":null,"np":0,"src":"estimación por tendencia (PollCheck)","margin":31.8}},{"id":"G-WY","kind":"G","st":"WY","name":"Wyoming","L":{"n":"Rep.","p":"D"},"R":{"n":"Barlow","p":"R"},"cur":"R","cook":"","polls":[],"ext":{"L":null,"R":null,"np":0,"src":"estimación por tendencia (PollCheck)","margin":-37.1}}],"bycycle":{"Sen":[{"c":1998,"n":17,"b":-3.23,"mae":4.47},{"c":2000,"n":27,"b":-1.85,"mae":4.2},{"c":2002,"n":22,"b":0.96,"mae":4.4},{"c":2004,"n":22,"b":0.73,"mae":3.65},{"c":2006,"n":24,"b":-1.54,"mae":2.62},{"c":2008,"n":27,"b":-0.18,"mae":3.84},{"c":2010,"n":28,"b":-2.18,"mae":4.73},{"c":2012,"n":26,"b":-3.24,"mae":3.89},{"c":2014,"n":27,"b":2.64,"mae":4.18},{"c":2016,"n":33,"b":5.16,"mae":5.85},{"c":2018,"n":22,"b":0.09,"mae":3.12},{"c":2020,"n":22,"b":5.29,"mae":5.33},{"c":2022,"n":21,"b":0.49,"mae":4.17},{"c":2024,"n":null,"b":3.0,"mae":4.1,"approx":true}],"Gov":[{"c":1998,"n":22,"b":-5.43,"mae":7.74},{"c":2000,"n":10,"b":-1.39,"mae":2.62},{"c":2002,"n":32,"b":3.74,"mae":4.73},{"c":2004,"n":6,"b":0.68,"mae":1.99},{"c":2006,"n":30,"b":0.16,"mae":3.76},{"c":2008,"n":8,"b":-0.77,"mae":2.58},{"c":2010,"n":29,"b":-0.02,"mae":4.22},{"c":2012,"n":7,"b":-2.42,"mae":3.79},{"c":2014,"n":30,"b":2.85,"mae":3.93},{"c":2016,"n":12,"b":4.1,"mae":6.06},{"c":2018,"n":24,"b":-0.47,"mae":3.95},{"c":2020,"n":5,"b":9.0,"mae":9.0},{"c":2022,"n":22,"b":0.87,"mae":3.81},{"c":2024,"n":null,"b":2.0,"mae":null,"approx":true}],"Gen":[{"c":1998,"n":1,"b":2.41,"mae":2.41},{"c":2000,"n":1,"b":2.09,"mae":2.09},{"c":2002,"n":1,"b":5.17,"mae":5.17},{"c":2004,"n":1,"b":4.07,"mae":4.07},{"c":2006,"n":1,"b":6.54,"mae":6.54},{"c":2008,"n":1,"b":-1.95,"mae":1.95},{"c":2010,"n":1,"b":-0.99,"mae":0.99},{"c":2012,"n":1,"b":-1.03,"mae":1.03},{"c":2014,"n":1,"b":2.7,"mae":2.7},{"c":2016,"n":1,"b":3.81,"mae":3.81},{"c":2018,"n":1,"b":-1.2,"mae":1.2},{"c":2020,"n":1,"b":5.01,"mae":5.01},{"c":2022,"n":1,"b":2.44,"mae":2.44},{"c":2024,"n":null,"b":3.0,"mae":null,"approx":true}]},"summary":{"Sen-G_all":{"cycles":15,"races":321,"bias":0.36,"cycleBiasMean":0.03,"cycleBiasSD":2.88,"idioSD":4.99,"mae":4.22,"totalSD":5.61},"Sen-G_mid":{"cycles":6,"races":144,"bias":0.05,"cycleBiasMean":0.08,"cycleBiasSD":1.75,"idioSD":5.32,"mae":3.9,"totalSD":5.49},"Sen-G_pres":{"cycles":9,"races":177,"bias":0.61,"cycleBiasMean":-0.01,"cycleBiasSD":3.55,"idioSD":4.71,"mae":4.48,"totalSD":5.71},"Gov-G_all":{"cycles":24,"races":259,"bias":0.74,"cycleBiasMean":1.3,"cycleBiasSD":3.27,"idioSD":5.09,"mae":4.4,"totalSD":5.63},"Gov-G_mid":{"cycles":6,"races":167,"bias":1.3,"cycleBiasMean":1.19,"cycleBiasSD":1.71,"idioSD":4.93,"mae":4.09,"totalSD":5.12},"Gov-G_pres":{"cycles":18,"races":92,"bias":-0.27,"cycleBiasMean":1.33,"cycleBiasSD":3.68,"idioSD":5.41,"mae":4.95,"totalSD":6.37},"House-G-US_all":{"cycles":13,"races":13,"bias":2.24,"cycleBiasMean":2.24,"cycleBiasSD":2.76,"idioSD":null,"mae":3.03,"totalSD":2.76},"House-G-US_mid":{"cycles":6,"races":6,"bias":2.44,"cycleBiasMean":2.44,"cycleBiasSD":3.14,"idioSD":null,"mae":3.17,"totalSD":3.14},"House-G-US_pres":{"cycles":7,"races":7,"bias":2.06,"cycleBiasMean":2.06,"cycleBiasSD":2.63,"idioSD":null,"mae":2.91,"totalSD":2.63},"House-G_all":{"cycles":18,"races":233,"bias":0.28,"cycleBiasMean":-0.01,"cycleBiasSD":6.58,"idioSD":5.71,"mae":4.79,"totalSD":6.13},"House-G_mid":{"cycles":6,"races":159,"bias":0.22,"cycleBiasMean":0.05,"cycleBiasSD":2.72,"idioSD":5.78,"mae":4.64,"totalSD":5.95},"House-G_pres":{"cycles":12,"races":74,"bias":0.42,"cycleBiasMean":-0.04,"cycleBiasSD":7.97,"idioSD":5.51,"mae":5.11,"totalSD":6.52}},"sponsor":{"DEM":4.06,"REP":-3.86},"senateSeatsNotUp":{"D":34,"R":31}};
+/* Motor del modelo: unificación de encuestadoras, ajuste por sesgo histórico y simulación.
+   Convención: margen = candidato de la izquierda (D o independiente alineado) menos R, en puntos.
+   Sesgo histórico: positivo = las encuestas sobreestimaron a D (subestimaron a R). */
+const Model = (function () {
+  const ASOF = Date.UTC(2026, 10, 1, 12);
+  const DAY = 864e5;
+
+  // Efecto de casa (puntos de margen, + = más pro-D que sus pares; encogido hacia 0) y nota 538 (0-3).
+  // Calculado en la base de 538 (1998-2022, últimos 21 días, encuestas no partidarias).
+  const PARAMS = {
+    'YouGov': [0.50, 3.0], 'Emerson': [-1.14, 2.9], 'Marist': [0.28, 2.9], 'NYT/Siena': [0.33, 3.0],
+    'Ipsos': [0.31, 2.8], 'Suffolk': [0.86, 2.9], 'Data for Progress': [-0.78, 2.6],
+    'Morning Consult': [-0.10, 1.9], 'Quinnipiac': [0, 2.8], 'Rasmussen': [-1.10, 1.5],
+    'InsiderAdvantage': [-0.66, 2.0], 'Cygnal': [-0.73, 2.1], 'SSRS': [1.40, 2.4],
+    'Beacon/Shaw': [0.69, 2.8], 'Hart/POS': [0.21, 2.6], 'Change Research': [-1.03, 1.4],
+    'Targoz': [-0.69, 1.8], 'Mitchell': [-0.36, 2.4], 'Glengariff': [0.84, 1.5], 'PPP': [0.65, 1.4],
+    'Trafalgar': [0, 0.7], 'Echelon': [-0.07, 2.7], 'Noble': [-0.08, 2.4], 'East Carolina': [-0.09, 2.6],
+    'Big Data Poll': [0, 1.1], 'Clarity': [0, 1.6], 'Global Strategy': [0, 1.8], 'Impact': [0, 1.5],
+    'GQR': [0, 2.0], 'Harvard/Harris': [-0.34, 1.5], 'Mason-Dixon': [-0.58, 2.6],
+    'Saint Anselm': [-0.74, 2.4], 'co/efficient': [-0.75, 1.1], 'Washington Post': [0, 2.7],
+    'Sin calificación': [0, 1.5]
+  };
+  const RULES = [
+    [/yougov/, 'YouGov'], [/new york times|nyt|siena/, 'NYT/Siena'], [/emerson/, 'Emerson'],
+    [/marist/, 'Marist'], [/ipsos/, 'Ipsos'], [/suffolk/, 'Suffolk'], [/data for progress/, 'Data for Progress'],
+    [/morning consult/, 'Morning Consult'], [/quinnipiac/, 'Quinnipiac'], [/rasmussen/, 'Rasmussen'],
+    [/insideradvantage/, 'InsiderAdvantage'], [/cygnal/, 'Cygnal'], [/ssrs/, 'SSRS'], [/beacon/, 'Beacon/Shaw'],
+    [/hart/, 'Hart/POS'], [/change research/, 'Change Research'], [/targoz/, 'Targoz'], [/mitchell/, 'Mitchell'],
+    [/glengariff/, 'Glengariff'], [/public policy polling/, 'PPP'], [/trafalgar/, 'Trafalgar'],
+    [/echelon/, 'Echelon'], [/noble/, 'Noble'], [/east carolina/, 'East Carolina'], [/big data/, 'Big Data Poll'],
+    [/clarity/, 'Clarity'], [/global strategy group/, 'Global Strategy'], [/impact research/, 'Impact'],
+    [/gqr/, 'GQR'], [/harvard|harris/, 'Harvard/Harris'], [/mason-dixon/, 'Mason-Dixon'],
+    [/saint anselm/, 'Saint Anselm'], [/co\/efficient/, 'co/efficient'], [/washington post/, 'Washington Post']
+  ];
+  function canon(name) {
+    const n = name.toLowerCase();
+    for (const [re, k] of RULES) if (re.test(n)) return k;
+    return 'Sin calificación';
+  }
+  function info(name) { const k = canon(name); const p = PARAMS[k]; return { key: k, he: p[0], grade: p[1] }; }
+
+  // Efecto de patrocinador (538): encuestas de un patrocinador demócrata sobreestiman D en +4,06;
+  // las de patrocinador republicano sobreestiman R en 3,86.
+  const SPONSOR = { D: 4.06, R: -3.86 };
+
+  const defaults = { house: true, sponsor: true, quality: true, halfLife: 10 };
+
+  function dateOf(d) { const [y, m, dd] = d.split('-').map(Number); return Date.UTC(y, m - 1, dd, 12); }
+
+  function unify(polls, opts) {
+    opts = Object.assign({}, defaults, opts || {});
+    const rows = polls.map((p) => {
+      const inf = info(p.p);
+      const days = Math.max(0, (ASOF - dateOf(p.d)) / DAY);
+      const nEff = p.n || 800;
+      const raw = p.L - p.R;
+      let adj = raw;
+      if (opts.house) adj -= inf.he;
+      if (opts.sponsor && p.sp) adj -= SPONSOR[p.sp];
+      const wRec = Math.pow(0.5, days / opts.halfLife);
+      const wN = Math.min(1.5, Math.max(0.6, Math.sqrt(Math.min(nEff, 1500) / 600)));
+      const wQ = opts.quality ? Math.min(1, Math.max(0.35, 0.35 + 0.2 * inf.grade)) : 1;
+      const wPop = p.pop === 'LV' ? 1 : p.pop === 'RV' ? 0.7 : 0.5;
+      const wSp = p.sp ? 0.6 : 1;
+      const pl = p.L / 100, pr = p.R / 100;
+      const se = 100 * Math.sqrt(Math.max(1e-6, pl + pr - (pl - pr) * (pl - pr)) / nEff * 1.5);
+      return { p, inf, days, raw, adj, w: wRec * wN * wQ * wPop * wSp, se, nEff, assumedN: !p.n };
+    });
+    // misma encuestadora repetida: cada encuesta anterior pesa 0,6 veces la anterior
+    const byKey = {};
+    rows.forEach((r) => { (byKey[r.inf.key === 'Sin calificación' ? r.p.p : r.inf.key] = byKey[r.inf.key === 'Sin calificación' ? r.p.p : r.inf.key] || []).push(r); });
+    Object.values(byKey).forEach((g) => { g.sort((a, b) => a.days - b.days); g.forEach((r, i) => { r.w *= Math.pow(0.6, i); r.rep = i; }); });
+    const sw = rows.reduce((s, r) => s + r.w, 0);
+    if (!rows.length || sw <= 0) return { rows, n: 0 };
+    const m = rows.reduce((s, r) => s + r.w * r.adj, 0) / sw;
+    const simple = rows.reduce((s, r) => s + r.raw, 0) / rows.length;
+    const rawW = rows.reduce((s, r) => s + r.w * r.raw, 0) / sw;
+    const sw2 = rows.reduce((s, r) => s + r.w * r.w, 0);
+    const nPoll = sw * sw / sw2;
+    const seSamp2 = rows.reduce((s, r) => s + r.w * r.w * r.se * r.se, 0) / (sw * sw);
+    const se = Math.sqrt(seSamp2 + 1.2 * 1.2 / Math.max(1, nPoll));
+    rows.forEach((r) => { r.share = r.w / sw; });
+    return { rows, n: rows.length, m, simple, rawW, se, nPoll, seSamp: Math.sqrt(seSamp2) };
+  }
+
+  // Escenarios de sesgo (puntos, + = encuestas sobreestimaron a D). Fuente: base 538 y Silver Bulletin (2024).
+  const SCENARIOS = {
+    none: { label: 'Sin ajuste (encuestas tal cual)', Sen: 0, Gov: 0, Gen: 0 },
+    mid: { label: 'Promedio de midterms 2002–2022', Sen: 0.08, Gov: 1.19, Gen: 2.44 },
+    r3: { label: 'Como 2016, 2020 y 2024 (error pro-D)', Sen: 4.48, Gov: 3.05, Gen: 3.94 },
+    r2: { label: 'Como 2018 y 2022', Sen: 0.29, Gov: 0.20, Gen: 0.62 },
+    d3: { label: 'Encuestas subestiman a D en 3 pts', Sen: -3, Gov: -3, Gen: -3 }
+  };
+
+  const PRIOR = { 'Solid R': -22, 'Likely R': -10, 'Lean R': -5, 'Toss-up': 0, 'Lean D': 5, 'Likely D': 10, 'Solid D': 22 };
+  const SIGMA_H = { S: 4.99, G: 5.09 }; // dispersión histórica de errores de promedios por carrera (538)
+
+  // Estimación base de una carrera (antes del ajuste por sesgo)
+  function estimate(r, opts) {
+    const out = { id: r.id };
+    let mP = null, vP = null, u = null;
+    if (r.polls && r.polls.length) {
+      u = unify(r.polls, opts);
+      if (u.n) { mP = u.m; vP = u.se * u.se; }
+    }
+    out.u = u;
+    out.srcMain = u && u.n ? 'polls' : null;
+    // pocas encuestas cargadas frente a las que cuenta el agregador: se mezcla con su promedio
+    if (mP !== null && r.ext && u.n < 10 && r.ext.np > 2 * u.n) {
+      const me = r.ext.margin !== undefined ? r.ext.margin : r.ext.L - r.ext.R, ve = 2.5 * 2.5;
+      mP = (mP / vP + me / ve) / (1 / vP + 1 / ve); vP = 1 / (1 / vP + 1 / ve);
+      out.blend = true;
+    }
+    if (mP === null && r.ext) {
+      const e = r.ext;
+      mP = e.margin !== undefined ? e.margin : e.L - e.R;
+      vP = (e.src.indexOf('tendencia') >= 0 ? 6 : 3) ** 2;
+      out.srcMain = 'ext';
+    }
+    const prior = r.kind === 'S' ? (PRIOR[r.cook] !== undefined ? PRIOR[r.cook] : 0) : null;
+    if (mP === null) {
+      // sin encuestas ni promedio externo: solo la calificación de Cook (Senado)
+      out.mu = prior; out.v = 6 * 6; out.srcMain = 'rating';
+    } else if (prior !== null) {
+      const vPr = 100;
+      out.mu = (mP / vP + prior / vPr) / (1 / vP + 1 / vPr);
+      out.v = 1 / (1 / vP + 1 / vPr);
+    } else { out.mu = mP; out.v = vP; }
+    out.raw = mP;
+    out.sigma = Math.sqrt(Math.max(0, SIGMA_H[r.kind] ** 2 - 4) + out.v);
+    // margen de error del promedio (95%) en pts de margen, solo muestreo + efecto de casa
+    out.moe = 1.96 * Math.sqrt(out.v);
+    return out;
+  }
+
+  // RNG determinista
+  function rng(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a += 0x6D2B79F5; let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function normal(rand) { let u = 0, v = 0; while (u === 0) u = rand(); v = rand(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+  const HOUSE = { S0: 239, mRef: 8.5, beta: 5.5, sd: 8 };
+
+  // Posterior en vivo de una carrera con recuento parcial
+  function livePosterior(mu, live) {
+    const tot = live.D + live.R + (live.I || 0);
+    if (!tot) return null;
+    const f = Math.min(1, Math.max(0, live.f));
+    const c = (live.D - live.R) / tot * 100;
+    const rho = 0.5, s = 8;
+    const mean = f * c + (1 - f) * (mu + rho * (c - mu));
+    return { c, f, mean, sd: Math.max(0.05, (1 - f) * s) };
+  }
+
+  // Simulación conjunta Senado + gobernaciones + Cámara
+  function simulate(data, opts) {
+    opts = Object.assign({ scenario: 'mid', custom: null, sigmaNat: 2.5, N: 20000, house: true, sponsor: true, quality: true, live: {}, seed: 2026 }, opts || {});
+    const sc = opts.custom !== null && opts.custom !== undefined ? { Sen: opts.custom, Gov: opts.custom, Gen: opts.custom } : SCENARIOS[opts.scenario];
+    const uOpts = { house: opts.house, sponsor: opts.sponsor, quality: opts.quality };
+    const gen = unify(data.generic, Object.assign({ halfLife: 10 }, uOpts));
+    const races = [];
+    const prep = (list, biasKey) => list.forEach((r) => {
+      const e = estimate(r, Object.assign({ halfLife: 12 }, uOpts));
+      const bias = sc[biasKey];
+      const adj = e.mu - bias;
+      const o = { r, e, adj, bias, live: opts.live[r.id] || null };
+      if (o.live) o.lp = livePosterior(adj, o.live);
+      races.push(o);
+    });
+    prep(data.senate, 'Sen'); prep(data.gov, 'Gov');
+    const rand = rng(opts.seed);
+    const nS = data.senate.length, nG = data.gov.length;
+    const win = races.map(() => 0);
+    const sDist = new Array(101).fill(0), gDist = new Array(37).fill(0);
+    const ctl = { D: 0, R: 0, I: 0 };
+    let houseWin = 0, both = 0, hSum = 0;
+    const hHist = new Array(436).fill(0);
+    const seatSamples = [];
+    const genM = gen.n ? gen.m : 0;
+    for (let k = 0; k < opts.N; k++) {
+      const zn = normal(rand) * opts.sigmaNat;
+      let dSeats = data.senateSeatsNotUp.D, rSeats = data.senateSeatsNotUp.R, iSeats = 0, gD = 0;
+      for (let i = 0; i < races.length; i++) {
+        const o = races[i];
+        let M;
+        if (o.live && o.live.called) { M = o.live.called === o.r.R.p ? -1 : 1; }
+        else if (o.lp) { M = o.lp.mean + normal(rand) * o.lp.sd; }
+        else M = o.adj + zn + normal(rand) * o.e.sigma;
+        const leftWins = M > 0;
+        if (leftWins) win[i]++;
+        if (i < nS) {
+          if (leftWins) { if (o.r.L.p === 'D') dSeats++; else iSeats++; } else rSeats++;
+        } else if (leftWins) gD++;
+      }
+      sDist[dSeats]++; gDist[gD]++;
+      let c;
+      if (dSeats >= 51) c = 'D'; else if (rSeats >= 51 || (dSeats === 50 && rSeats === 50)) c = 'R'; else c = 'I';
+      ctl[c]++;
+      const seats = HOUSE.S0 + HOUSE.beta * ((genM - HOUSE.mRef) - sc.Gen + zn) + normal(rand) * HOUSE.sd;
+      const hs = Math.max(150, Math.min(300, Math.round(seats)));
+      hHist[hs]++; hSum += hs;
+      if (hs >= 218) { houseWin++; if (c === 'D') both++; }
+    }
+    const N = opts.N;
+    const quant = (hist, q) => { let a = 0; for (let i = 0; i < hist.length; i++) { a += hist[i]; if (a / N >= q) return i; } return hist.length - 1; };
+    return {
+      opts, sc, gen, races, N,
+      p: races.map((_, i) => win[i] / N),
+      senate: { dist: sDist, ctl: { D: ctl.D / N, R: ctl.R / N, I: ctl.I / N }, med: quant(sDist, 0.5), lo: quant(sDist, 0.1), hi: quant(sDist, 0.9),
+        mean: sDist.reduce((s, v, i) => s + v * i, 0) / N },
+      gov: { dist: gDist, mean: gDist.reduce((s, v, i) => s + v * i, 0) / N, lo: quant(gDist, 0.1), hi: quant(gDist, 0.9) },
+      house: { p: houseWin / N, mean: hSum / N, med: quant(hHist, 0.5), lo: quant(hHist, 0.1), hi: quant(hHist, 0.9), hist: hHist },
+      both: both / N
+    };
+  }
+
+  return { canon, info, unify, estimate, simulate, livePosterior, SCENARIOS, PARAMS, SPONSOR, HOUSE, PRIOR, SIGMA_H, ASOF };
+})();
+if (false && typeof module !== 'undefined') module.exports = Model;
+
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const f1=(x,d=1)=>(x>=0?'+':'−')+Math.abs(x).toFixed(d);
+const mfmt=(m,Lp)=>{const a=Math.abs(m).toFixed(1);return m>=0?Lp+'+'+a:(Lp==='I'?'R':'R')+'+'+a};
+const mcls=(m,Lp)=>m>=0?(Lp==='I'?'I':'D'):'R';
+const pc=x=>x>=0.995?'>99%':x<=0.005?'<1%':Math.round(x*100)+'%';
+let live={},tab='S',res=null,N=20000,tmr=null;
+$('asof').textContent=new Date(DATA.asof+'T12:00:00').toLocaleDateString('es-UY',{day:'numeric',month:'long'});
+const sel=$('scen');
+Object.entries(Model.SCENARIOS).forEach(([k,v])=>sel.add(new Option(v.label,k)));
+sel.add(new Option('Personalizado (deslizador)','custom'));sel.value='mid';
+
+function run(){
+  const o={scenario:sel.value,sigmaNat:+$('sig').value,N,house:$('oh').checked,sponsor:$('osp').checked,quality:$('oq').checked,live};
+  if(sel.value==='custom')o.custom=+$('cust').value;
+  res=Model.simulate(DATA,o);render();
+}
+function sched(){clearTimeout(tmr);tmr=setTimeout(run,60)}
+['scen','cust','sig','oh','osp','oq'].forEach(i=>$(i).addEventListener('input',()=>{$('cv').textContent=f1(+$('cust').value,2);$('sv').textContent=(+$('sig').value).toFixed(2);sched()}));
+$('cv').textContent=f1(0,2);$('sv').textContent='2.50';
+
+function stack(p){return `<div class="bar"><div style="flex:${p.D};background:var(--D)" title="D ${pc(p.D)}"></div>${p.I>0.005?`<div style="flex:${p.I};background:var(--I)" title="Independientes deciden ${pc(p.I)}"></div>`:''}<div style="flex:${p.R};background:var(--R)" title="R ${pc(p.R)}"></div></div>`}
+
+function hist(el,dist,lo,hi,thr,colorFn,med){
+  const W=520,H=150,pad=22,bw=(W-10)/(hi-lo+1);const mx=Math.max(...dist.slice(lo,hi+1));
+  let s=`<svg viewBox="0 0 ${W} ${H+pad}" width="100%" role="img" aria-label="Distribución de bancas">`;
+  for(let i=lo;i<=hi;i++){const h=dist[i]/mx*(H-14);const x=5+(i-lo)*bw;
+    s+=`<rect x="${x.toFixed(1)}" y="${(H-h).toFixed(1)}" width="${Math.max(1,bw-1.5).toFixed(1)}" height="${h.toFixed(1)}" rx="1.5" fill="${colorFn(i)}"><title>${i} bancas D: ${(dist[i]/res.N*100).toFixed(1)}%</title></rect>`}
+  const tx=5+(thr-lo)*bw;s+=`<line x1="${tx}" x2="${tx}" y1="4" y2="${H}" stroke="var(--fg)" stroke-dasharray="3 3"/><text x="${tx+3}" y="12">${thr}</text>`;
+  const step=Math.ceil((hi-lo)/8/5)*5;for(let i=Math.ceil(lo/step)*step;i<=hi;i+=step)s+=`<text x="${5+(i-lo)*bw}" y="${H+14}" text-anchor="middle">${i}</text>`;
+  $(el).innerHTML=s+'</svg>';
+}
+
+function render(){
+  const r=res,s=r.senate,h=r.house;
+  const hp={D:h.p,R:1-h.p,I:0},bp=r.both;
+  $('scdesc').textContent=`Sesgo aplicado (pts hacia D que se resta): Senado ${f1(r.sc.Sen,2)}, gobernaciones ${f1(r.sc.Gov,2)}, generic ${f1(r.sc.Gen,2)}.`;
+  $('ctrl').innerHTML=`
+  <div class="panel"><h3>Senado (51 para controlar; 50-50 lo decide el VP, R)</h3><div class="big"><span class="D">${pc(s.ctl.D)}</span> <span style="font-size:15px;font-weight:500;color:var(--fg2)">D controla</span></div>${stack(s.ctl)}
+  <div class="kv"><span class="R">R ${pc(s.ctl.R)}</span>${s.ctl.I>0.005?`<span class="I">Independientes deciden ${pc(s.ctl.I)}</span>`:''}<span>Mediana ${s.med} D · 80%: ${s.lo}–${s.hi}</span></div></div>
+  <div class="panel"><h3>Cámara (218) · simplificado</h3><div class="big"><span class="D">${pc(hp.D)}</span> <span style="font-size:15px;font-weight:500;color:var(--fg2)">D controla</span></div>${stack(hp)}
+  <div class="kv"><span class="R">R ${pc(hp.R)}</span><span>Bancas D: media ${h.mean.toFixed(0)} · 80%: ${h.lo}–${h.hi}</span></div></div>
+  <div class="panel"><h3>Ambas cámaras y gobernaciones</h3><div class="big"><span class="D">${pc(bp)}</span> <span style="font-size:15px;font-weight:500;color:var(--fg2)">D en ambas</span></div>
+  <div class="kv"><span>Gobernaciones D (de 36): media ${r.gov.mean.toFixed(1)} · 80%: ${r.gov.lo}–${r.gov.hi}</span><span>Generic unificado ${f1(r.gen.m)} ±${(1.96*r.gen.se).toFixed(1)} → ajustado ${f1(r.gen.m-r.sc.Gen)}</span></div></div>`;
+  hist('hsen',s.dist,38,62,51,i=>i>=51?'var(--D)':'var(--R)');
+  hist('hhou',h.hist,180,290,218,i=>i>=218?'var(--D)':'var(--R)');
+  ext();generic();races();
+}
+
+function ext(){
+  const g=r_=>r_.D-r_.R;
+  const rows=[...DATA.genericExt.map(e=>[e.src,e.asof,g(e)]),['Esta página (unificado)','',res.gen.m],['Promedio simple de las '+res.gen.n+' encuestas','',res.gen.simple]];
+  const lo=0,hi=14,W=520;let s=`<svg viewBox="0 0 ${W} ${rows.length*24+20}" width="100%" style="max-width:640px">`;
+  const X=v=>110+(v-lo)/(hi-lo)*(W-130);
+  rows.forEach((r_,i)=>{const y=i*24+14,own=i>=DATA.genericExt.length;
+    s+=`<text x="0" y="${y+4}" style="fill:var(--fg2)">${r_[0].slice(0,18)}</text><line x1="${X(lo)}" x2="${X(hi)}" y1="${y}" y2="${y}" stroke="var(--grid)"/><circle cx="${X(r_[2])}" cy="${y}" r="6" fill="var(--D)" stroke="var(--panel)" stroke-width="2"><title>${r_[0]}: D${f1(r_[2],1)}</title></circle><text x="${X(r_[2])+10}" y="${y+4}" style="fill:var(--fg)">${f1(r_[2],1)}</text>`});
+  $('ext').innerHTML=s+'</svg><p class="note">Márgenes D−R del voto generic, pts. Cada agregador usa método propio.</p>';
+}
+
+function generic(){
+  const g=res.gen;
+  $('gsum').innerHTML=`Unificado: <b class="num D">D${f1(g.m)}</b> ± ${(1.96*g.se).toFixed(1)} (95%) · promedio simple D${f1(g.simple)} · ${g.n} encuestas (n efectivo ≈ ${Math.round(g.nPoll)}). Tras el sesgo del escenario: <b class="num">D${f1(g.m-res.sc.Gen)}</b>.`;
+  $('gtab').innerHTML=`<tr><th>Casa</th><th>Fecha</th><th>Pob.</th><th class="n">n</th><th class="n">D</th><th class="n">R</th><th class="n">Margen</th><th class="n">Efecto casa</th><th class="n">Ajustado</th><th class="n">Peso</th></tr>`+
+  g.rows.map(x=>`<tr><td>${x.p.p}${x.p.sp?` <span class="tag">${x.p.sp==='D'?'patroc. D':'patroc. R'}</span>`:''}</td><td class="n">${x.p.d.slice(5)}</td><td>${x.p.pop}</td><td class="n">${x.p.n||'—'}${x.assumedN?'*':''}</td><td class="n">${x.p.L}</td><td class="n">${x.p.R}</td><td class="n">${f1(x.raw)}</td><td class="n">${f1(x.inf.he)}</td><td class="n"><b>${f1(x.adj)}</b></td><td class="n">${(x.share*100).toFixed(1)}%</td></tr>`).join('')+
+  `<tr><td colspan="10" class="note">* n asumido 800. Peso = participación en la media final.</td></tr>`;
+  pollsters();
+}
+
+function races(){
+  const isS=tab==='S',list=res.races.map((o,i)=>({o,i,p:res.p[i]})).filter(x=>x.o.r.kind===tab);
+  list.sort((a,b)=>Math.abs(a.o.adj)-Math.abs(b.o.adj));
+  const hd=`<tr><th>Carrera</th>${isS?'<th>Cook</th>':''}<th>Act.</th><th class="n">Enc.</th><th class="n">Agreg.</th><th class="n">Margen ± MoE</th><th class="n">Ajustado</th><th>P(izq. gana)</th><th>Recuento</th></tr>`;
+  let h=hd;
+  list.forEach(({o,i,p})=>{
+    const r=o.r,e=o.e,L=r.L.p,rcls=mcls(e.mu,L);
+    const extm=r.ext?(r.ext.margin!==undefined?r.ext.margin:r.ext.L-r.ext.R):null;
+    const lv=o.live;let lt='';
+    if(lv){lt=lv.called?`<span class="tag ${lv.called==='R'?'R':'D'}">proyectada ${lv.called}</span>`:`${Math.round(lv.f*100)}% · ${o.lp?f1(o.lp.c):''}`}
+    h+=`<tr class="rw" data-i="${i}"><td><b>${r.name}</b> <span class="note">${r.L.n} (${L}) – ${r.R.n} (${r.R.p})</span></td>${isS?`<td>${r.cook||'—'}</td>`:''}<td>${r.cur}</td><td class="n">${r.polls.length}</td><td class="n">${extm===null?'—':f1(extm)}</td><td class="n ${rcls}">${mfmt(e.mu,L)} ±${e.moe.toFixed(1)}</td><td class="n ${mcls(o.adj,L)}">${mfmt(o.adj,L)}</td><td><span class="pb"><i style="width:${(p*100).toFixed(0)}%"></i></span><span class="num">${pc(p)}</span></td><td>${lt}</td></tr>`;
+    h+=`<tr class="sub" id="sb${i}" hidden><td colspan="${isS?9:8}">${rowDetail(o)}</td></tr>`;
+  });
+  $('rtab').innerHTML=h;
+  $('rtab').querySelectorAll('tr.rw').forEach(tr=>tr.onclick=()=>{const s=$('sb'+tr.dataset.i);s.hidden=!s.hidden});
+}
+function rowDetail(o){
+  const e=o.e,r=o.r;let t=`Fuente principal: ${e.srcMain==='polls'?'encuestas cargadas'+(e.blend?' + promedio de agregador (pocas encuestas cargadas)':''):e.srcMain==='ext'?'promedio de agregador '+(r.ext?r.ext.src:''):'sólo calificación Cook'}. σ de carrera ${e.sigma.toFixed(1)} · sesgo restado ${f1(o.bias,2)}. `;
+  if(r.ext)t+=`Agregador (${r.ext.src}): ${r.ext.L}–${r.ext.R}, ${r.ext.np} encuestas. `;
+  if(r.polls.length)t+='<br>'+r.polls.map(p=>`${p.p}${p.sp?' ('+p.sp+')':''}, ${p.d.slice(5)}, ${p.pop}${p.n?', n='+p.n:''}: ${p.L}–${p.R} (${f1(p.L-p.R)})`).join('<br>');
+  return t;
+}
+$('tS').onclick=()=>{tab='S';$('tS').classList.add('on');$('tG').classList.remove('on');races()};
+$('tG').onclick=()=>{tab='G';$('tG').classList.add('on');$('tS').classList.remove('on');races()};
+
+function histCharts(){
+  const defs=[['Sen','Senado'],['Gov','Gobernaciones'],['Gen','Generic ballot (Cámara)']];
+  $('hist').innerHTML=defs.map(([k,nm])=>{
+    const rows=DATA.bycycle[k],W=340,rh=17,H=rows.length*rh+22,mid=190,sc=14;
+    let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Sesgo ${nm}"><line x1="${mid}" x2="${mid}" y1="2" y2="${H-18}" stroke="var(--line)"/>`;
+    rows.forEach((r,i)=>{const y=i*rh+4,w=Math.abs(r.b)*sc,pos=r.b>=0;
+      s+=`<text x="${mid-70}" y="${y+10}" text-anchor="end">${r.c}${r.approx?'~':''}</text><rect x="${pos?mid:mid-w}" y="${y}" width="${Math.max(1,w)}" height="11" rx="2" fill="${pos?'var(--R)':'var(--D)'}"><title>${nm} ${r.c}: ${f1(r.b,2)} (error absoluto medio ${r.mae??'—'})</title></rect><text x="${pos?mid+w+4:mid-w-4}" y="${y+10}" text-anchor="${pos?'start':'end'}">${f1(r.b,1)}</text>`});
+    s+=`<text x="${mid-6}" y="${H-4}" text-anchor="end">← subestimó a D</text><text x="${mid+6}" y="${H-4}">subestimó a R →</text></svg>`;
+    return `<div class="panel"><h3>${nm}</h3>${s}</div>`}).join('');
+  const rows=[['Senado','Sen-G'],['Gobernaciones','Gov-G'],['Generic','House-G-US']];
+  $('htab').innerHTML='<tr><th>Elección</th><th>Períodos</th><th class="n">Ciclos</th><th class="n">Sesgo medio</th><th class="n">Variación entre ciclos (DE)</th><th class="n">Error idiosincrático (DE)</th><th class="n">Error abs. medio</th></tr>'+
+  rows.map(([nm,k])=>[['all','Todos 1998–2022'],['mid','Midterms'],['pres','Presidenciales']].map(([t,l])=>{const x=DATA.summary[k+'_'+t];return x?`<tr><td>${nm}</td><td>${l}</td><td class="n">${x.cycles}</td><td class="n">${f1(x.cycleBiasMean,2)}</td><td class="n">${x.cycleBiasSD}</td><td class="n">${x.idioSD}</td><td class="n">${x.mae}</td></tr>`:''}).join('')).join('');
+}
+function pollsters(){
+  const m={};
+  [...DATA.generic,...DATA.senate.flatMap(r=>r.polls),...DATA.gov.flatMap(r=>r.polls)].forEach(p=>{const i=Model.info(p.p);m[i.key]=m[i.key]||{k:i.key,he:i.he,g:i.grade,n:0};m[i.key].n++});
+  const L=Object.values(m).sort((a,b)=>b.n-a.n);
+  $('ptab').innerHTML='<tr><th>Casa</th><th class="n">Encuestas cargadas</th><th class="n">Efecto de casa</th><th class="n">Calidad (0–3)</th></tr>'+L.map(x=>`<tr><td>${x.k}</td><td class="n">${x.n}</td><td class="n">${f1(x.he,2)}</td><td class="n">${x.g==null?'—':x.g.toFixed(1)}</td></tr>`).join('');
+}
+
+function parseLive(t){
+  t=t.trim();const out={};
+  if(!t)return out;
+  let arr;
+  if(t[0]==='{'||t[0]==='['){const j=JSON.parse(t);arr=Array.isArray(j)?j:j.races}
+  else{arr=t.split(/\r?\n/).filter(l=>l.trim()&&!/^id/i.test(l)).map(l=>{const c=l.split(',').map(x=>x.trim());return{id:c[0],counted:c[1],D:c[2],R:c[3],I:c[4],called:c[5]}})}
+  arr.forEach(x=>{const f=Math.min(1,Math.max(0,parseFloat(x.counted)/100));
+    out[x.id]={f:isNaN(f)?0:f,D:+x.D||0,R:+x.R||0,I:+x.I||0,called:x.called||null}});
+  return out;
+}
+$('lgo').onclick=()=>{try{const l=parseLive($('lv').value);const ids=new Set(DATA.senate.concat(DATA.gov).map(r=>r.id));const bad=Object.keys(l).filter(k=>!ids.has(k));
+  live=l;$('lmsg').textContent=Object.keys(l).length+' carreras'+(bad.length?'; ids desconocidos: '+bad.join(', '):'');run()}catch(e){$('lmsg').textContent='Error de formato: '+e.message}};
+$('lclr').onclick=()=>{live={};$('lv').value='';$('lmsg').textContent='';run()};
+$('lex').onclick=()=>{$('lv').value='id,counted_pct,D,R,I,called\nS-TX,62,2310000,2400000,0,\nS-IA,100,610000,690000,0,R\nS-NC,45,1500000,1450000,0,';$('lmsg').textContent='EJEMPLO SIMULADO, no son resultados reales. Pulsa Aplicar.'};
+
+let auto=null;
+async function pull(){
+  if(!/^https?:/.test(location.protocol))return;
+  try{const r=await fetch('results.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;
+    const j=await r.json();if(!j.races||!j.races.length)return;
+    if($('lv').value.trim()&&!auto)return; // el usuario pegó datos a mano: no pisarlos
+    live=parseLive(JSON.stringify(j));auto=j.updated||true;
+    $('lmsg').textContent='Automático desde AP · actualizado '+(j.updated?new Date(j.updated).toLocaleTimeString('es-UY'):'')+' · '+j.races.length+' carreras';run()}catch(e){}
+}
+pull();setInterval(pull,60000);
+histCharts();run();
+</script>
